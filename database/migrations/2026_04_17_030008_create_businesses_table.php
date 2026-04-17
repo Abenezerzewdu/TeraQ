@@ -13,6 +13,15 @@ return new class extends Migration
     {
         Schema::create('businesses', function (Blueprint $table) {
             $table->id();
+
+            $table->string('name');
+            $table->string('location')->nullable();
+
+            // Optional for future auth
+            $table->unsignedBigInteger('owner_id')->nullable();
+
+            $table->boolean('is_active')->default(true);
+
             $table->timestamps();
         });
     }

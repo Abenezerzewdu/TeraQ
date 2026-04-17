@@ -11,9 +11,35 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('queue_entries', function (Blueprint $table) {
+       Schema::create('queue_entries', function (Blueprint $table) {
             $table->id();
+
+            $table->foreignId('queue_id')
+                  ->constrained()
+                  ->cascadeOnDelete();
+
+            // For now, no auth → just name
+            $table->string('user_name');
+
+            // Position in queue
+            $table->integer('position');
+
+            // Status lifecycle
+            $table->enum('status', [
+                'waiting',
+                'serving',
+                'done',
+                'left'
+            ])->default('waiting');
+
+            $table->timestamp('joined_at')->useCurrent();
+            $table->timestamp('served_at')->nullable();
+
             $table->timestamps();
+
+            // 🚀 Important for performance
+            $table->index(['queue_id', 'status']);
+            $table->index(['queue_id', 'position']);
         });
     }
 

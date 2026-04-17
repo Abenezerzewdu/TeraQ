@@ -13,6 +13,19 @@ return new class extends Migration
     {
         Schema::create('queues', function (Blueprint $table) {
             $table->id();
+
+            $table->foreignId('business_id')
+                  ->constrained()
+                  ->cascadeOnDelete();
+
+            $table->string('name'); // e.g. "Haircut Queue"
+
+            $table->enum('status', ['open', 'closed'])
+                  ->default('open');
+
+            $table->integer('avg_service_time') // in minutes
+                  ->default(10);
+
             $table->timestamps();
         });
     }
