@@ -1,9 +1,40 @@
 <script setup>
 import { useForm } from "@inertiajs/vue3";
+import { ref, onMounted, onUnmounted } from "vue";
 
 const props = defineProps({
     queue: Object,
     entries: Array,
+});
+
+// ✅ Clone initial data (correct)
+const entries = ref([...props.entries]);
+
+let channel = null;
+
+onMounted(() => {
+    channel = window.Echo.channel(`queue.${props.queue.id}`).listen(
+        ".user.joined",
+        (e) => {
+            console.log("EVENT RECEIVED:", e);
+
+            // ✅ Prevent duplicates
+            const exists = entries.value.find(
+                (entry) => entry.id === e.entry.id,
+            );
+
+            if (!exists) {
+                entries.value = [...entries.value, e.entry];
+            }
+        },
+    );
+});
+
+// ✅ cleanup (important)
+onUnmounted(() => {
+    if (channel) {
+        channel.stopListening(".user.joined");
+    }
 });
 
 const form = useForm({
@@ -11,7 +42,10 @@ const form = useForm({
 });
 
 const join = () => {
-    form.post(`/queues/${props.queue.slug}/join`);
+    form.post(`/queues/${props.queue.slug}/join`, {
+        preserveScroll: true,
+        preserveState: true, // 🔥 VERY IMPORTANT
+    });
 };
 </script>
 
