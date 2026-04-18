@@ -6,9 +6,21 @@ use App\Models\Business;
 use App\Models\Queue;
 use App\Services\QueueService;
 use Illuminate\Http\Request;
+use Inertia\Inertia;
 
 class QueueController extends Controller
 {
+
+public function show(Queue $queue)
+    {
+        $queue->load('entries');
+
+        return Inertia::render('Queue/Show', [
+            'queue' => $queue,
+            'entries' => $queue->entries()->orderBy('position')->get(),
+        ]);
+    }
+    
 // create a queue for business
 public function store(Business $business, Request $request)
 {

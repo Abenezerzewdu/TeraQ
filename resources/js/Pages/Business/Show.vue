@@ -27,7 +27,7 @@ const submitQueue = () => {
         <ul>
             <li v-for="queue in business.queues" :key="queue.id">
                 {{ queue.name }} ({{ queue.avg_service_time }} min)
-                <a :href="`/queues/${queue.id}/join`">Open</a>
+                <a :href="`/queues/${queue.id}`">Open</a>
             </li>
         </ul>
 
