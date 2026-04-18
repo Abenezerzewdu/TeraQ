@@ -32,5 +32,8 @@ return Inertia::render('QueuePage');
 });
 
 Route::post('/businesses', [BusinessController::class, 'store']);
+Route::get('/businesses/create', [BusinessController::class, 'create']);
+Route::get('/businesses/{business}', [BusinessController::class, 'show']);
+
 Route::post('/businesses/{business}/queues', [QueueController::class, 'store']);
 require __DIR__.'/auth.php';

@@ -4,10 +4,25 @@ namespace App\Http\Controllers;
 
 use App\Models\Business;
 use Illuminate\Http\Request;
+use Inertia\Inertia;
 
 class BusinessController extends Controller
 {
     //
+public function show(Business $business)
+{
+    $business->load('queues');
+
+    return Inertia::render('Business/Show', [
+        'business' => $business
+    ]);
+}
+    public function create()
+{
+    return Inertia::render('Business/Create');
+}
+
+
       public function store(Request $request)
     {
         $validated = $request->validate([
