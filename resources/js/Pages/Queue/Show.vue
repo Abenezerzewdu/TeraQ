@@ -11,7 +11,7 @@ const form = useForm({
 });
 
 const join = () => {
-    form.post(`/queues/${props.queue.id}/join`);
+    form.post(`/queues/${props.queue.slug}/join`);
 };
 </script>
 

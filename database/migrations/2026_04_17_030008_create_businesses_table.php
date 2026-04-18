@@ -21,6 +21,7 @@ return new class extends Migration
             $table->unsignedBigInteger('owner_id')->nullable();
 
             $table->boolean('is_active')->default(true);
+             $table->string('slug')->unique();
 
             $table->timestamps();
         });

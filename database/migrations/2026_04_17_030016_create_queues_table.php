@@ -25,7 +25,7 @@ return new class extends Migration
 
             $table->integer('avg_service_time') // in minutes
                   ->default(10);
-
+            $table->string('slug')->unique();
             $table->timestamps();
         });
     }

@@ -14,7 +14,8 @@ public function show(Business $business)
     $business->load('queues');
 
     return Inertia::render('Business/Show', [
-        'business' => $business
+        'business' => $business,
+        'slug'=>$business->slug
     ]);
 }
     public function create()

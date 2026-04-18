@@ -11,7 +11,7 @@ const form = useForm({
 });
 
 const submitQueue = () => {
-    form.post(`/businesses/${props.business.id}/queues`);
+    form.post(`/businesses/${props.business.slug}/queues`);
 };
 </script>
 
@@ -27,7 +27,7 @@ const submitQueue = () => {
         <ul>
             <li v-for="queue in business.queues" :key="queue.id">
                 {{ queue.name }} ({{ queue.avg_service_time }} min)
-                <a :href="`/queues/${queue.id}`">Open</a>
+                <a :href="`/queues/${queue.slug}`">Open</a>
             </li>
         </ul>
 
