@@ -2,13 +2,27 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Business;
 use App\Models\Queue;
 use App\Services\QueueService;
 use Illuminate\Http\Request;
 
 class QueueController extends Controller
 {
-    //join queue
+// create a queue for business
+public function store(Business $business, Request $request)
+{
+    $validated = $request->validate([
+        'name' => 'required|string',
+        'avg_service_time' => 'required|integer|min:1',
+    ]);
+
+    $business->queues()->create($validated);
+
+    return back()->with('success', 'Queue created');
+}
+
+    //join queue using QueueService
     public function join(Queue $queue,Request $request,QueueService $service){
    $validated = $request->validate([
             'name' => 'required|string|max:255',

@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\BusinessController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\QueueController;
 use Illuminate\Foundation\Application;
@@ -26,5 +27,10 @@ Route::middleware('auth')->group(function () {
 });
 Route::post('/queues/{queue}/join',[QueueController::class,'join']);
 
+Route::get('/join',function(){
+return Inertia::render('QueuePage');
+});
 
+Route::post('/businesses', [BusinessController::class, 'store']);
+Route::post('/businesses/{business}/queues', [QueueController::class, 'store']);
 require __DIR__.'/auth.php';

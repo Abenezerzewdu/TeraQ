@@ -18,7 +18,7 @@ class QueueService
             return $queue->entries()->create([
                 'user_name' => $name,
                 'position' => $lastPosition + 1,
-                'status' => QueueEntry::STATUS_WAITING,
+                'status' =>'waiting',
             ]);
         });
     }
