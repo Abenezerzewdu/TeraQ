@@ -1,198 +1,229 @@
 <script setup>
 import { ref } from 'vue';
-import ApplicationLogo from '@/Components/ApplicationLogo.vue';
-import Dropdown from '@/Components/Dropdown.vue';
-import DropdownLink from '@/Components/DropdownLink.vue';
-import NavLink from '@/Components/NavLink.vue';
-import ResponsiveNavLink from '@/Components/ResponsiveNavLink.vue';
-import { Link } from '@inertiajs/vue3';
+import { Link, usePage } from '@inertiajs/vue3';
+import { 
+    LayoutDashboard, 
+    PlusSquare, 
+    Zap, 
+    BarChart3, 
+    Settings, 
+    LogOut, 
+    Search,
+    Bell,
+    HelpCircle,
+    Menu,
+    X,
+    MessageSquare,
+    Compass,
+    Home
+} from 'lucide-vue-next';
 
-const showingNavigationDropdown = ref(false);
+const isSidebarOpen = ref(true);
+const isMobileMenuOpen = ref(false);
+
+const toggleSidebar = () => {
+    isSidebarOpen.value = !isSidebarOpen.value;
+};
+
+const navigation = [
+    { name: 'Dashboard', href: route('dashboard'), icon: LayoutDashboard, current: route().current('dashboard') },
+    { name: 'Create Business', href: route('businesses/create'), icon: PlusSquare, current: route().current('business.create') },
+    { name: 'Active Queues', href: '#', icon: Zap, current: false },
+    { name: 'Analytics', href: '#', icon: BarChart3, current: false },
+    { name: 'Settings', href: '#', icon: Settings, current: false },
+];
+
+const topNav = [
+    { name: 'Home', href: route('dashboard'), icon: Home },
+    { name: 'Explore', href: '#', icon: Compass },
+    { name: 'Support', href: '#', icon: MessageSquare },
+];
 </script>
 
 <template>
-    <div>
-        <div class="min-h-screen bg-gray-100">
-            <nav
-                class="border-b border-gray-100 bg-white"
-            >
-                <!-- Primary Navigation Menu -->
-                <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-                    <div class="flex h-16 justify-between">
-                        <div class="flex">
-                            <!-- Logo -->
-                            <div class="flex shrink-0 items-center">
-                                <Link :href="route('dashboard')">
-                                    <ApplicationLogo
-                                        class="block h-9 w-auto fill-current text-gray-800"
-                                    />
-                                </Link>
-                            </div>
-
-                            <!-- Navigation Links -->
-                            <div
-                                class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex"
-                            >
-                                <NavLink
-                                    :href="route('dashboard')"
-                                    :active="route().current('dashboard')"
-                                >
-                                    Dashboard
-                                </NavLink>
-                            </div>
-                        </div>
-
-                        <div class="hidden sm:ms-6 sm:flex sm:items-center">
-                            <!-- Settings Dropdown -->
-                            <div class="relative ms-3">
-                                <Dropdown align="right" width="48">
-                                    <template #trigger>
-                                        <span class="inline-flex rounded-md">
-                                            <button
-                                                type="button"
-                                                class="inline-flex items-center rounded-md border border-transparent bg-white px-3 py-2 text-sm font-medium leading-4 text-gray-500 transition duration-150 ease-in-out hover:text-gray-700 focus:outline-none"
-                                            >
-                                                {{ $page.props.auth.user.name }}
-
-                                                <svg
-                                                    class="-me-0.5 ms-2 h-4 w-4"
-                                                    xmlns="http://www.w3.org/2000/svg"
-                                                    viewBox="0 0 20 20"
-                                                    fill="currentColor"
-                                                >
-                                                    <path
-                                                        fill-rule="evenodd"
-                                                        d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
-                                                        clip-rule="evenodd"
-                                                    />
-                                                </svg>
-                                            </button>
-                                        </span>
-                                    </template>
-
-                                    <template #content>
-                                        <DropdownLink
-                                            :href="route('profile.edit')"
-                                        >
-                                            Profile
-                                        </DropdownLink>
-                                        <DropdownLink
-                                            :href="route('logout')"
-                                            method="post"
-                                            as="button"
-                                        >
-                                            Log Out
-                                        </DropdownLink>
-                                    </template>
-                                </Dropdown>
-                            </div>
-                        </div>
-
-                        <!-- Hamburger -->
-                        <div class="-me-2 flex items-center sm:hidden">
-                            <button
-                                @click="
-                                    showingNavigationDropdown =
-                                        !showingNavigationDropdown
-                                "
-                                class="inline-flex items-center justify-center rounded-md p-2 text-gray-400 transition duration-150 ease-in-out hover:bg-gray-100 hover:text-gray-500 focus:bg-gray-100 focus:text-gray-500 focus:outline-none"
-                            >
-                                <svg
-                                    class="h-6 w-6"
-                                    stroke="currentColor"
-                                    fill="none"
-                                    viewBox="0 0 24 24"
-                                >
-                                    <path
-                                        :class="{
-                                            hidden: showingNavigationDropdown,
-                                            'inline-flex':
-                                                !showingNavigationDropdown,
-                                        }"
-                                        stroke-linecap="round"
-                                        stroke-linejoin="round"
-                                        stroke-width="2"
-                                        d="M4 6h16M4 12h16M4 18h16"
-                                    />
-                                    <path
-                                        :class="{
-                                            hidden: !showingNavigationDropdown,
-                                            'inline-flex':
-                                                showingNavigationDropdown,
-                                        }"
-                                        stroke-linecap="round"
-                                        stroke-linejoin="round"
-                                        stroke-width="2"
-                                        d="M6 18L18 6M6 6l12 12"
-                                    />
-                                </svg>
-                            </button>
-                        </div>
-                    </div>
+    <div class="min-h-screen bg-teraq-bg flex overflow-hidden">
+        <!-- Desktop Sidebar -->
+        <aside 
+            class="hidden md:flex flex-col w-72 bg-teraq-surface border-r border-white/5 transition-all duration-300"
+            :class="{ 'w-20': !isSidebarOpen }"
+        >
+            <div class="p-6 flex items-center gap-3">
+                <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-teraq-primary to-teraq-secondary flex items-center justify-center shadow-lg shadow-teraq-primary/20 shrink-0">
+                    <span class="text-white font-bold text-xl">T</span>
                 </div>
+                <div v-show="isSidebarOpen" class="transition-opacity duration-300">
+                    <h1 class="text-white font-bold text-lg leading-tight">TeraQ Business</h1>
+                    <p class="text-teraq-muted text-[10px] uppercase tracking-widest font-medium">Kinetic Precision</p>
+                </div>
+            </div>
 
-                <!-- Responsive Navigation Menu -->
-                <div
-                    :class="{
-                        block: showingNavigationDropdown,
-                        hidden: !showingNavigationDropdown,
-                    }"
-                    class="sm:hidden"
+            <nav class="flex-1 px-4 py-6 space-y-2">
+                <Link 
+                    v-for="item in navigation" 
+                    :key="item.name" 
+                    :href="item.href"
+                    class="sidebar-link"
+                    :class="{ 'sidebar-link-active': item.current, 'justify-center px-2': !isSidebarOpen }"
+                    :title="item.name"
                 >
-                    <div class="space-y-1 pb-3 pt-2">
-                        <ResponsiveNavLink
-                            :href="route('dashboard')"
-                            :active="route().current('dashboard')"
-                        >
-                            Dashboard
-                        </ResponsiveNavLink>
-                    </div>
-
-                    <!-- Responsive Settings Options -->
-                    <div
-                        class="border-t border-gray-200 pb-1 pt-4"
-                    >
-                        <div class="px-4">
-                            <div
-                                class="text-base font-medium text-gray-800"
-                            >
-                                {{ $page.props.auth.user.name }}
-                            </div>
-                            <div class="text-sm font-medium text-gray-500">
-                                {{ $page.props.auth.user.email }}
-                            </div>
-                        </div>
-
-                        <div class="mt-3 space-y-1">
-                            <ResponsiveNavLink :href="route('profile.edit')">
-                                Profile
-                            </ResponsiveNavLink>
-                            <ResponsiveNavLink
-                                :href="route('logout')"
-                                method="post"
-                                as="button"
-                            >
-                                Log Out
-                            </ResponsiveNavLink>
-                        </div>
-                    </div>
-                </div>
+                    <component :is="item.icon" class="w-5 h-5 shrink-0" />
+                    <span v-show="isSidebarOpen" class="font-medium">{{ item.name }}</span>
+                </Link>
             </nav>
 
-            <!-- Page Heading -->
-            <header
-                class="bg-white shadow"
-                v-if="$slots.header"
-            >
-                <div class="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
-                    <slot name="header" />
+            <div class="p-4 mt-auto">
+                <Link 
+                    :href="route('logout')" 
+                    method="post" 
+                    as="button"
+                    class="sidebar-link hover:text-red-400 w-full"
+                    :class="{ 'justify-center': !isSidebarOpen }"
+                >
+                    <LogOut class="w-5 h-5 shrink-0" />
+                    <span v-show="isSidebarOpen" class="font-medium">Log Out</span>
+                </Link>
+            </div>
+        </aside>
+
+        <!-- Mobile Header -->
+        <header class="md:hidden fixed top-0 left-0 right-0 z-40 bg-teraq-surface/80 backdrop-blur-lg border-b border-white/5 p-4 flex items-center justify-between">
+            <div class="flex items-center gap-2">
+                <div class="w-8 h-8 rounded-lg bg-gradient-to-br from-teraq-primary to-teraq-secondary flex items-center justify-center">
+                    <span class="text-white font-bold text-sm">T</span>
+                </div>
+                <h1 class="text-white font-bold">TeraQ</h1>
+            </div>
+            <button @click="isMobileMenuOpen = true" class="text-teraq-muted">
+                <Menu class="w-6 h-6" />
+            </button>
+        </header>
+
+        <!-- Mobile Menu Overlay -->
+        <Transition
+            enter-active-class="transition duration-300 ease-out"
+            enter-from-class="opacity-0 translate-x-full"
+            enter-to-class="opacity-100 translate-x-0"
+            leave-active-class="transition duration-200 ease-in"
+            leave-from-class="opacity-100 translate-x-0"
+            leave-to-class="opacity-0 translate-x-full"
+        >
+            <div v-if="isMobileMenuOpen" class="fixed inset-0 z-50 md:hidden flex flex-col bg-teraq-bg">
+                <div class="p-6 flex items-center justify-between border-b border-white/5">
+                     <div class="flex items-center gap-2">
+                        <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-teraq-primary to-teraq-secondary flex items-center justify-center">
+                            <span class="text-white font-bold text-xl">T</span>
+                        </div>
+                        <h1 class="text-white font-bold text-lg">TeraQ</h1>
+                    </div>
+                    <button @click="isMobileMenuOpen = false" class="text-teraq-muted">
+                        <X class="w-6 h-6" />
+                    </button>
+                </div>
+                 <nav class="flex-1 px-6 py-8 space-y-4">
+                    <Link 
+                        v-for="item in navigation" 
+                        :key="item.name" 
+                        :href="item.href"
+                        @click="isMobileMenuOpen = false"
+                        class="flex items-center gap-4 text-xl text-teraq-muted"
+                        :class="{ 'text-teraq-primary font-bold': item.current }"
+                    >
+                        <component :is="item.icon" class="w-6 h-6" />
+                        {{ item.name }}
+                    </Link>
+                </nav>
+                <div class="p-6 border-t border-white/5">
+                     <Link 
+                        :href="route('logout')" 
+                        method="post" 
+                        as="button"
+                        class="flex items-center gap-4 text-xl text-red-400"
+                    >
+                        <LogOut class="w-6 h-6" />
+                        Log Out
+                    </Link>
+                </div>
+            </div>
+        </Transition>
+
+        <!-- Main Content -->
+        <main class="flex-1 flex flex-col h-screen overflow-hidden">
+            <!-- Top Bar -->
+            <header class="h-20 bg-teraq-bg border-b border-white/5 hidden md:flex items-center justify-between px-8 shrink-0">
+                <div class="flex items-center gap-8 flex-1">
+                    <button @click="toggleSidebar" class="text-teraq-muted hover:text-white transition-colors">
+                        <Menu class="w-5 h-5" />
+                    </button>
+                    
+                    <div class="relative w-full max-w-md group">
+                        <Search class="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-teraq-muted group-focus-within:text-teraq-primary transition-colors" />
+                        <input 
+                            type="text" 
+                            placeholder="Find services, queues, or places..."
+                            class="w-full bg-teraq-surface border-none rounded-xl pl-10 pr-4 py-2.5 text-sm text-white focus:ring-1 focus:ring-teraq-primary/30 placeholder:text-teraq-muted/50 transition-all"
+                        />
+                    </div>
+                </div>
+
+                <div class="flex items-center gap-6">
+                    <nav class="flex items-center gap-1 bg-teraq-surface/50 p-1 rounded-xl border border-white/5">
+                        <Link 
+                            v-for="item in topNav" 
+                            :key="item.name"
+                            :href="item.href"
+                            class="px-4 py-1.5 rounded-lg text-sm font-medium transition-all"
+                            :class="[route().current('dashboard') && item.name === 'Home' ? 'bg-teraq-primary text-white shadow-lg shadow-teraq-primary/20' : 'text-teraq-muted hover:text-white']"
+                        >
+                            {{ item.name }}
+                        </Link>
+                    </nav>
+
+                    <div class="flex items-center gap-3">
+                        <button class="w-10 h-10 flex items-center justify-center rounded-xl bg-teraq-surface border border-white/5 transition-colors hover:bg-white/5 relative">
+                            <Bell class="w-5 h-5 text-teraq-muted" />
+                            <span class="absolute top-2.5 right-3 w-2 h-2 bg-red-500 rounded-full border-2 border-teraq-surface"></span>
+                        </button>
+                        <button class="w-10 h-10 flex items-center justify-center rounded-xl bg-teraq-surface border border-white/5 transition-colors hover:bg-white/5">
+                            <HelpCircle class="w-5 h-5 text-teraq-muted" />
+                        </button>
+                    </div>
+
+                    <div class="h-8 w-px bg-white/5"></div>
+
+                    <div class="flex items-center gap-3">
+                        <div class="text-right hidden xl:block">
+                            <p class="text-white text-sm font-semibold">{{ $page.props.auth.user.name }}</p>
+                            <p class="text-teraq-muted text-[10px] uppercase tracking-wider">Business Admin</p>
+                        </div>
+                        <div class="w-10 h-10 rounded-xl border-2 border-white/10 p-0.5 shadow-lg overflow-hidden">
+                            <img src="https://ui-avatars.com/api/?name=Admin&background=2563eb&color=fff" alt="Profile" class="w-full h-full object-cover rounded-[10px]" />
+                        </div>
+                    </div>
                 </div>
             </header>
 
             <!-- Page Content -->
-            <main>
-                <slot />
-            </main>
-        </div>
+            <div class="flex-1 overflow-y-auto p-4 md:p-8 pt-24 md:pt-8 custom-scrollbar">
+                <div class="max-w-7xl mx-auto">
+                    <slot />
+                </div>
+            </div>
+        </main>
     </div>
 </template>
+
+<style scoped>
+.custom-scrollbar::-webkit-scrollbar {
+    width: 6px;
+}
+.custom-scrollbar::-webkit-scrollbar-track {
+    background: transparent;
+}
+.custom-scrollbar::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 10px;
+}
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+    background: rgba(255, 255, 255, 0.1);
+}
+</style>

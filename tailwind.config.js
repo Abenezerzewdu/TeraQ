@@ -12,9 +12,27 @@ export default {
 
     theme: {
         extend: {
-            fontFamily: {
-                sans: ['Figtree', ...defaultTheme.fontFamily.sans],
+            colors: {
+                teraq: {
+                    bg: '#0d0f14',
+                    surface: '#14171f',
+                    border: '#1e293b',
+                    primary: '#2563eb',
+                    secondary: '#3b82f6',
+                    muted: '#94a3b8',
+                    accent: '#818cf8',
+                }
             },
+            fontFamily: {
+                sans: ['Outfit', ...defaultTheme.fontFamily.sans],
+            },
+            backgroundImage: {
+                'gradient-radial': 'radial-gradient(var(--tw-gradient-stops))',
+                'glass-gradient': 'linear-gradient(135deg, rgba(255, 255, 255, 0.05) 0%, rgba(255, 255, 255, 0) 100%)',
+            },
+            boxShadow: {
+                'glass': '0 8px 32px 0 rgba(0, 0, 0, 0.37)',
+            }
         },
     },
 
