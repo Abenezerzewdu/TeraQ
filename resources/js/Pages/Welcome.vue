@@ -180,11 +180,13 @@ const stats = [
                     >
                         Get Started Free <ChevronRight class="w-5 h-5" />
                     </Link>
-                    <button
-                        class="w-full sm:w-auto px-10 py-5 bg-white/5 border border-white/10 rounded-2xl font-bold text-lg hover:bg-white/10 transition-all"
-                    >
-                        Explore Places
-                    </button>
+                    <Link :href="route('businesses')">
+                        <button
+                            class="w-full sm:w-auto px-10 py-5 bg-white/5 border border-white/10 rounded-2xl font-bold text-lg hover:bg-white/10 transition-all"
+                        >
+                            Explore Places
+                        </button>
+                    </Link>
                 </div>
 
                 <!-- Stats -->
@@ -486,7 +488,7 @@ const stats = [
                         >Twitter</a
                     >
                     <a
-                        href="#"
+                        href="https://www.instagram.com/abenaww/"
                         class="text-teraq-muted hover:text-white transition-colors font-bold text-[10px] tracking-widest uppercase"
                         >Instagram</a
                     >

@@ -24,6 +24,8 @@ Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+    Route::post('/businesses', [BusinessController::class, 'store']);
+Route::get('/businesses/create', [BusinessController::class, 'create'])->name('businesses.create');
 });
 Route::post('/queues/{queue}/join',[QueueController::class,'join']);
 
@@ -34,8 +36,7 @@ Route::get('/join',function(){
 return Inertia::render('QueuePage');
 });
 
-Route::post('/businesses', [BusinessController::class, 'store']);
-Route::get('/businesses/create', [BusinessController::class, 'create'])->name('businesses.create');
+
 Route::get('/businesses/{business}', [BusinessController::class, 'show'])->name('business.show');
 Route::get('/businesses',[BusinessController::class,'index'])->name('businesses');
 Route::get('/support',function(){
