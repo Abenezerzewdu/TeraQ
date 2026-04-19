@@ -11,9 +11,9 @@ use Inertia\Inertia;
 class QueueController extends Controller
 {
 
-public function show(Queue $queue)
+    public function show(Queue $queue)
     {
-        $queue->load('entries');
+        $queue->load(['entries', 'business']);
 
         return Inertia::render('Queue/Show', [
             'queue' => $queue,
@@ -49,4 +49,4 @@ public function store(Business $business, Request $request)
 
 
     }
-}
+

@@ -9,10 +9,27 @@ use Inertia\Inertia;
 class BusinessController extends Controller
 {
 
-public function index(){
+    public function index(Request $request)
+    {
+        $search = $request->input('search');
 
-return Inertia::render('Business/Index');
-}
+        $businesses = Business::with(['queues' => function($query) {
+                $query->withCount(['entries' => function($q) {
+                    $q->where('status', 'waiting');
+                }]);
+            }])
+            ->when($search, function ($query, $search) {
+                $query->where('name', 'like', "%{$search}%")
+                      ->orWhere('location', 'like', "%{$search}%");
+            })
+            ->latest()
+            ->get();
+
+        return Inertia::render('Business/Index', [
+            'businesses' => $businesses,
+            'filters' => $request->only(['search']),
+        ]);
+    }
     //
 public function show(Business $business)
 {
