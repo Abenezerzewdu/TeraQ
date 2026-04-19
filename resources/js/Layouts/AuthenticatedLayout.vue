@@ -1,13 +1,13 @@
 <script setup>
-import { ref } from 'vue';
-import { Link, usePage } from '@inertiajs/vue3';
-import { 
-    LayoutDashboard, 
-    PlusSquare, 
-    Zap, 
-    BarChart3, 
-    Settings, 
-    LogOut, 
+import { ref } from "vue";
+import { Link, usePage } from "@inertiajs/vue3";
+import {
+    LayoutDashboard,
+    PlusSquare,
+    Zap,
+    BarChart3,
+    Settings,
+    LogOut,
     Search,
     Bell,
     HelpCircle,
@@ -15,8 +15,8 @@ import {
     X,
     MessageSquare,
     Compass,
-    Home
-} from 'lucide-vue-next';
+    Home,
+} from "lucide-vue-next";
 
 const isSidebarOpen = ref(true);
 const isMobileMenuOpen = ref(false);
@@ -26,69 +26,101 @@ const toggleSidebar = () => {
 };
 
 const navigation = [
-    { name: 'Dashboard', href: route('dashboard'), icon: LayoutDashboard, current: route().current('dashboard') },
-    { name: 'Create Business', href: route('businesses/create'), icon: PlusSquare, current: route().current('business.create') },
-    { name: 'Active Queues', href: '#', icon: Zap, current: false },
-    { name: 'Analytics', href: '#', icon: BarChart3, current: false },
-    { name: 'Settings', href: '#', icon: Settings, current: false },
+    {
+        name: "Dashboard",
+        href: route("dashboard"),
+        icon: LayoutDashboard,
+        current: route().current("dashboard"),
+    },
+    {
+        name: "Create Business",
+        href: route("businesses.create"),
+        icon: PlusSquare,
+        current: route().current("business.create"),
+    },
+    { name: "Active Queues", href: "#", icon: Zap, current: false },
+    { name: "Analytics", href: "#", icon: BarChart3, current: false },
+    { name: "Settings", href: "#", icon: Settings, current: false },
 ];
 
 const topNav = [
-    { name: 'Home', href: route('dashboard'), icon: Home },
-    { name: 'Explore', href: '#', icon: Compass },
-    { name: 'Support', href: '#', icon: MessageSquare },
+    { name: "Home", href: route("dashboard"), icon: Home },
+    { name: "Explore", href: "#", icon: Compass },
+    { name: "Support", href: "#", icon: MessageSquare },
 ];
 </script>
 
 <template>
     <div class="min-h-screen bg-teraq-bg flex overflow-hidden">
         <!-- Desktop Sidebar -->
-        <aside 
+        <aside
             class="hidden md:flex flex-col w-72 bg-teraq-surface border-r border-white/5 transition-all duration-300"
             :class="{ 'w-20': !isSidebarOpen }"
         >
             <div class="p-6 flex items-center gap-3">
-                <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-teraq-primary to-teraq-secondary flex items-center justify-center shadow-lg shadow-teraq-primary/20 shrink-0">
+                <div
+                    class="w-10 h-10 rounded-xl bg-gradient-to-br from-teraq-primary to-teraq-secondary flex items-center justify-center shadow-lg shadow-teraq-primary/20 shrink-0"
+                >
                     <span class="text-white font-bold text-xl">T</span>
                 </div>
-                <div v-show="isSidebarOpen" class="transition-opacity duration-300">
-                    <h1 class="text-white font-bold text-lg leading-tight">TeraQ Business</h1>
-                    <p class="text-teraq-muted text-[10px] uppercase tracking-widest font-medium">Kinetic Precision</p>
+                <div
+                    v-show="isSidebarOpen"
+                    class="transition-opacity duration-300"
+                >
+                    <h1 class="text-white font-bold text-lg leading-tight">
+                        TeraQ Business
+                    </h1>
+                    <p
+                        class="text-teraq-muted text-[10px] uppercase tracking-widest font-medium"
+                    >
+                        Kinetic Precision
+                    </p>
                 </div>
             </div>
 
             <nav class="flex-1 px-4 py-6 space-y-2">
-                <Link 
-                    v-for="item in navigation" 
-                    :key="item.name" 
+                <Link
+                    v-for="item in navigation"
+                    :key="item.name"
                     :href="item.href"
                     class="sidebar-link"
-                    :class="{ 'sidebar-link-active': item.current, 'justify-center px-2': !isSidebarOpen }"
+                    :class="{
+                        'sidebar-link-active': item.current,
+                        'justify-center px-2': !isSidebarOpen,
+                    }"
                     :title="item.name"
                 >
                     <component :is="item.icon" class="w-5 h-5 shrink-0" />
-                    <span v-show="isSidebarOpen" class="font-medium">{{ item.name }}</span>
+                    <span v-show="isSidebarOpen" class="font-medium">{{
+                        item.name
+                    }}</span>
                 </Link>
             </nav>
 
             <div class="p-4 mt-auto">
-                <Link 
-                    :href="route('logout')" 
-                    method="post" 
+                <Link
+                    :href="route('logout')"
+                    method="post"
                     as="button"
                     class="sidebar-link hover:text-red-400 w-full"
                     :class="{ 'justify-center': !isSidebarOpen }"
                 >
                     <LogOut class="w-5 h-5 shrink-0" />
-                    <span v-show="isSidebarOpen" class="font-medium">Log Out</span>
+                    <span v-show="isSidebarOpen" class="font-medium"
+                        >Log Out</span
+                    >
                 </Link>
             </div>
         </aside>
 
         <!-- Mobile Header -->
-        <header class="md:hidden fixed top-0 left-0 right-0 z-40 bg-teraq-surface/80 backdrop-blur-lg border-b border-white/5 p-4 flex items-center justify-between">
+        <header
+            class="md:hidden fixed top-0 left-0 right-0 z-40 bg-teraq-surface/80 backdrop-blur-lg border-b border-white/5 p-4 flex items-center justify-between"
+        >
             <div class="flex items-center gap-2">
-                <div class="w-8 h-8 rounded-lg bg-gradient-to-br from-teraq-primary to-teraq-secondary flex items-center justify-center">
+                <div
+                    class="w-8 h-8 rounded-lg bg-gradient-to-br from-teraq-primary to-teraq-secondary flex items-center justify-center"
+                >
                     <span class="text-white font-bold text-sm">T</span>
                 </div>
                 <h1 class="text-white font-bold">TeraQ</h1>
@@ -107,35 +139,47 @@ const topNav = [
             leave-from-class="opacity-100 translate-x-0"
             leave-to-class="opacity-0 translate-x-full"
         >
-            <div v-if="isMobileMenuOpen" class="fixed inset-0 z-50 md:hidden flex flex-col bg-teraq-bg">
-                <div class="p-6 flex items-center justify-between border-b border-white/5">
-                     <div class="flex items-center gap-2">
-                        <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-teraq-primary to-teraq-secondary flex items-center justify-center">
+            <div
+                v-if="isMobileMenuOpen"
+                class="fixed inset-0 z-50 md:hidden flex flex-col bg-teraq-bg"
+            >
+                <div
+                    class="p-6 flex items-center justify-between border-b border-white/5"
+                >
+                    <div class="flex items-center gap-2">
+                        <div
+                            class="w-10 h-10 rounded-xl bg-gradient-to-br from-teraq-primary to-teraq-secondary flex items-center justify-center"
+                        >
                             <span class="text-white font-bold text-xl">T</span>
                         </div>
                         <h1 class="text-white font-bold text-lg">TeraQ</h1>
                     </div>
-                    <button @click="isMobileMenuOpen = false" class="text-teraq-muted">
+                    <button
+                        @click="isMobileMenuOpen = false"
+                        class="text-teraq-muted"
+                    >
                         <X class="w-6 h-6" />
                     </button>
                 </div>
-                 <nav class="flex-1 px-6 py-8 space-y-4">
-                    <Link 
-                        v-for="item in navigation" 
-                        :key="item.name" 
+                <nav class="flex-1 px-6 py-8 space-y-4">
+                    <Link
+                        v-for="item in navigation"
+                        :key="item.name"
                         :href="item.href"
                         @click="isMobileMenuOpen = false"
                         class="flex items-center gap-4 text-xl text-teraq-muted"
-                        :class="{ 'text-teraq-primary font-bold': item.current }"
+                        :class="{
+                            'text-teraq-primary font-bold': item.current,
+                        }"
                     >
                         <component :is="item.icon" class="w-6 h-6" />
                         {{ item.name }}
                     </Link>
                 </nav>
                 <div class="p-6 border-t border-white/5">
-                     <Link 
-                        :href="route('logout')" 
-                        method="post" 
+                    <Link
+                        :href="route('logout')"
+                        method="post"
                         as="button"
                         class="flex items-center gap-4 text-xl text-red-400"
                     >
@@ -149,16 +193,23 @@ const topNav = [
         <!-- Main Content -->
         <main class="flex-1 flex flex-col h-screen overflow-hidden">
             <!-- Top Bar -->
-            <header class="h-20 bg-teraq-bg border-b border-white/5 hidden md:flex items-center justify-between px-8 shrink-0">
+            <header
+                class="h-20 bg-teraq-bg border-b border-white/5 hidden md:flex items-center justify-between px-8 shrink-0"
+            >
                 <div class="flex items-center gap-8 flex-1">
-                    <button @click="toggleSidebar" class="text-teraq-muted hover:text-white transition-colors">
+                    <button
+                        @click="toggleSidebar"
+                        class="text-teraq-muted hover:text-white transition-colors"
+                    >
                         <Menu class="w-5 h-5" />
                     </button>
-                    
+
                     <div class="relative w-full max-w-md group">
-                        <Search class="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-teraq-muted group-focus-within:text-teraq-primary transition-colors" />
-                        <input 
-                            type="text" 
+                        <Search
+                            class="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-teraq-muted group-focus-within:text-teraq-primary transition-colors"
+                        />
+                        <input
+                            type="text"
                             placeholder="Find services, queues, or places..."
                             class="w-full bg-teraq-surface border-none rounded-xl pl-10 pr-4 py-2.5 text-sm text-white focus:ring-1 focus:ring-teraq-primary/30 placeholder:text-teraq-muted/50 transition-all"
                         />
@@ -166,24 +217,37 @@ const topNav = [
                 </div>
 
                 <div class="flex items-center gap-6">
-                    <nav class="flex items-center gap-1 bg-teraq-surface/50 p-1 rounded-xl border border-white/5">
-                        <Link 
-                            v-for="item in topNav" 
+                    <nav
+                        class="flex items-center gap-1 bg-teraq-surface/50 p-1 rounded-xl border border-white/5"
+                    >
+                        <Link
+                            v-for="item in topNav"
                             :key="item.name"
                             :href="item.href"
                             class="px-4 py-1.5 rounded-lg text-sm font-medium transition-all"
-                            :class="[route().current('dashboard') && item.name === 'Home' ? 'bg-teraq-primary text-white shadow-lg shadow-teraq-primary/20' : 'text-teraq-muted hover:text-white']"
+                            :class="[
+                                route().current('dashboard') &&
+                                item.name === 'Home'
+                                    ? 'bg-teraq-primary text-white shadow-lg shadow-teraq-primary/20'
+                                    : 'text-teraq-muted hover:text-white',
+                            ]"
                         >
                             {{ item.name }}
                         </Link>
                     </nav>
 
                     <div class="flex items-center gap-3">
-                        <button class="w-10 h-10 flex items-center justify-center rounded-xl bg-teraq-surface border border-white/5 transition-colors hover:bg-white/5 relative">
+                        <button
+                            class="w-10 h-10 flex items-center justify-center rounded-xl bg-teraq-surface border border-white/5 transition-colors hover:bg-white/5 relative"
+                        >
                             <Bell class="w-5 h-5 text-teraq-muted" />
-                            <span class="absolute top-2.5 right-3 w-2 h-2 bg-red-500 rounded-full border-2 border-teraq-surface"></span>
+                            <span
+                                class="absolute top-2.5 right-3 w-2 h-2 bg-red-500 rounded-full border-2 border-teraq-surface"
+                            ></span>
                         </button>
-                        <button class="w-10 h-10 flex items-center justify-center rounded-xl bg-teraq-surface border border-white/5 transition-colors hover:bg-white/5">
+                        <button
+                            class="w-10 h-10 flex items-center justify-center rounded-xl bg-teraq-surface border border-white/5 transition-colors hover:bg-white/5"
+                        >
                             <HelpCircle class="w-5 h-5 text-teraq-muted" />
                         </button>
                     </div>
@@ -192,18 +256,32 @@ const topNav = [
 
                     <div class="flex items-center gap-3">
                         <div class="text-right hidden xl:block">
-                            <p class="text-white text-sm font-semibold">{{ $page.props.auth.user.name }}</p>
-                            <p class="text-teraq-muted text-[10px] uppercase tracking-wider">Business Admin</p>
+                            <p class="text-white text-sm font-semibold">
+                                {{ $page.props.auth.user.name }}
+                            </p>
+                            <p
+                                class="text-teraq-muted text-[10px] uppercase tracking-wider"
+                            >
+                                Business Admin
+                            </p>
                         </div>
-                        <div class="w-10 h-10 rounded-xl border-2 border-white/10 p-0.5 shadow-lg overflow-hidden">
-                            <img src="https://ui-avatars.com/api/?name=Admin&background=2563eb&color=fff" alt="Profile" class="w-full h-full object-cover rounded-[10px]" />
+                        <div
+                            class="w-10 h-10 rounded-xl border-2 border-white/10 p-0.5 shadow-lg overflow-hidden"
+                        >
+                            <img
+                                src="https://ui-avatars.com/api/?name=Admin&background=2563eb&color=fff"
+                                alt="Profile"
+                                class="w-full h-full object-cover rounded-[10px]"
+                            />
                         </div>
                     </div>
                 </div>
             </header>
 
             <!-- Page Content -->
-            <div class="flex-1 overflow-y-auto p-4 md:p-8 pt-24 md:pt-8 custom-scrollbar">
+            <div
+                class="flex-1 overflow-y-auto p-4 md:p-8 pt-24 md:pt-8 custom-scrollbar"
+            >
                 <div class="max-w-7xl mx-auto">
                     <slot />
                 </div>
