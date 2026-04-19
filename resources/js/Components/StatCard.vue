@@ -23,10 +23,10 @@ const colors = {
 </script>
 
 <template>
-    <div class="glass-card p-6 flex flex-col justify-between h-full group relative overflow-hidden">
+    <div class="glass-card p-6 flex flex-col justify-between h-full group relative overflow-hidden active:scale-[0.98] transition-all duration-300">
         <!-- Background Glow -->
         <div 
-            class="absolute -right-4 -top-4 w-24 h-24 blur-[60px] opacity-20 transition-opacity duration-500 group-hover:opacity-40"
+            class="absolute -right-4 -top-4 w-32 h-32 blur-[60px] opacity-10 transition-opacity duration-700 group-hover:opacity-40"
             :class="[
                 color === 'blue' ? 'bg-blue-500' : '',
                 color === 'green' ? 'bg-emerald-500' : '',
@@ -35,22 +35,24 @@ const colors = {
             ]"
         ></div>
 
-        <div>
-            <p class="text-teraq-muted text-xs uppercase tracking-widest font-bold mb-4">{{ label }}</p>
+        <div class="relative z-10">
+            <p class="text-teraq-muted text-[10px] uppercase tracking-[0.2em] font-bold mb-4 opacity-70 group-hover:opacity-100 transition-opacity">{{ label }}</p>
             <div class="flex items-baseline gap-2">
-                <h2 class="text-4xl font-bold text-white tracking-tight">{{ value }}</h2>
-                <span v-if="unit" class="text-teraq-muted text-lg font-medium">{{ unit }}</span>
+                <h2 class="text-4xl font-black text-white tracking-tighter group-hover:text-transparent group-hover:bg-clip-text group-hover:bg-gradient-to-r group-hover:from-white group-hover:to-white/50 transition-all duration-500">{{ value }}</h2>
+                <span v-if="unit" class="text-teraq-muted text-lg font-medium opacity-50">{{ unit }}</span>
             </div>
         </div>
 
-        <div class="mt-6 flex items-center justify-between">
-            <div v-if="trend" class="flex items-center gap-1.5 px-2 py-1 rounded-lg text-[10px] font-bold uppercase tracking-wider bg-white/5 border border-white/5">
+        <div class="mt-6 flex items-center justify-between relative z-10">
+            <div v-if="trend" class="flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[9px] font-bold uppercase tracking-wider bg-white/5 border border-white/10 backdrop-blur-md">
                 <span :class="[trend === 'up' ? 'text-emerald-400' : trend === 'down' ? 'text-red-400' : 'text-blue-400']">
                     {{ trend === 'up' ? '↑' : trend === 'down' ? '↓' : '•' }} {{ trendValue }}
                 </span>
             </div>
             
-            <slot name="icon" />
+            <div class="opacity-40 group-hover:opacity-100 group-hover:scale-110 transition-all duration-500 transform">
+                <slot name="icon" />
+            </div>
         </div>
     </div>
 </template>
