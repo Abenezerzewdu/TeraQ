@@ -14,7 +14,7 @@ Route::get('/', function () {
         'laravelVersion' => Application::VERSION,
         'phpVersion' => PHP_VERSION,
     ]);
-});
+})->name('home');
 
 Route::get('/dashboard', function () {
     return Inertia::render('Dashboard');
@@ -37,6 +37,10 @@ return Inertia::render('QueuePage');
 Route::post('/businesses', [BusinessController::class, 'store']);
 Route::get('/businesses/create', [BusinessController::class, 'create'])->name('businesses.create');
 Route::get('/businesses/{business}', [BusinessController::class, 'show'])->name('business.show');
+Route::get('/businesses',[BusinessController::class,'index'])->name('businesses');
+Route::get('/support',function(){
+   return Inertia::render('Support');
+})->name('support');
 
 Route::post('/businesses/{business}/queues', [QueueController::class, 'store']);
 require __DIR__.'/auth.php';

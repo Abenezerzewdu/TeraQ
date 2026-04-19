@@ -44,9 +44,9 @@ const navigation = [
 ];
 
 const topNav = [
-    { name: "Home", href: route("dashboard"), icon: Home },
-    { name: "Explore", href: "#", icon: Compass },
-    { name: "Support", href: "#", icon: MessageSquare },
+    { name: "Home", href: route("home"), icon: Home },
+    { name: "Explore", href: route("businesses"), icon: Compass },
+    { name: "Support", href: route("support"), icon: MessageSquare },
 ];
 </script>
 
