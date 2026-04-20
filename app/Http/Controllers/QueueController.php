@@ -37,14 +37,14 @@ public function store(Business $business, Request $request)
     //join queue using QueueService
     public function join(Queue $queue, Request $request, QueueService $service)
     {
-        $validated = $request->validate([
+        $request->validate([
             'name' => 'nullable|string|max:255',
             'phone'=>'nullable|string|max:20',
             'device_id' => 'required|string',
         ]);
 
-        $name = $validated['name'] ?? 'Guest ' . rand(100, 999);
-        $service->joinQueue($queue, $name);
+        // $name = $validated['name'] ?? 'Guest ' . rand(100, 999);
+        $service->joinQueue($queue, $request);
 
         return back()->with('success', 'You joined the queue successfully.');
     }
