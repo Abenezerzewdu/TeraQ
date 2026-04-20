@@ -11,12 +11,13 @@ import { Link } from '@inertiajs/vue3';
         
         <!-- Logo -->
         <div class="relative z-10 mb-8 transform transition-all duration-500 hover:scale-110">
-            <Link href="/">
+            <Link :href="route('home')">
                 <div class="p-3 rounded-2xl bg-white/5 border border-white/10 backdrop-blur-md shadow-2xl">
-                    <ApplicationLogo class="h-12 w-12 fill-current text-white" />
+                    <ApplicationLogo class="h-12 w-12" />
                 </div>
             </Link>
         </div>
+
 
         <!-- Glass Card -->
         <div class="relative z-10 w-full sm:max-w-md">

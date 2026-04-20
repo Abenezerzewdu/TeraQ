@@ -1,5 +1,6 @@
 <script setup>
 import { ref } from "vue";
+import ApplicationLogo from "@/Components/ApplicationLogo.vue";
 import { Link, usePage } from "@inertiajs/vue3";
 import {
     LayoutDashboard,
@@ -58,11 +59,11 @@ const topNav = [
             :class="{ 'w-20': !isSidebarOpen }"
         >
             <div class="p-6 flex items-center gap-3">
-                <div
-                    class="w-10 h-10 rounded-xl bg-gradient-to-br from-teraq-primary to-teraq-secondary flex items-center justify-center shadow-lg shadow-teraq-primary/20 shrink-0"
-                >
-                    <span class="text-white font-bold text-xl">T</span>
-                </div>
+                <Link :href="route('home')" class="shrink-0 group">
+                    <div class="w-10 h-10 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center shadow-lg transition-transform group-hover:scale-110">
+                        <ApplicationLogo class="w-7 h-7" />
+                    </div>
+                </Link>
                 <div
                     v-show="isSidebarOpen"
                     class="transition-opacity duration-300"
@@ -118,11 +119,11 @@ const topNav = [
             class="md:hidden fixed top-0 left-0 right-0 z-40 bg-teraq-surface/80 backdrop-blur-lg border-b border-white/5 p-4 flex items-center justify-between"
         >
             <div class="flex items-center gap-2">
-                <div
-                    class="w-8 h-8 rounded-lg bg-gradient-to-br from-teraq-primary to-teraq-secondary flex items-center justify-center"
-                >
-                    <span class="text-white font-bold text-sm">T</span>
-                </div>
+                <Link :href="route('home')" class="group">
+                    <div class="w-8 h-8 rounded-lg bg-white/5 border border-white/10 flex items-center justify-center transition-transform group-hover:scale-110">
+                        <ApplicationLogo class="w-5 h-5" />
+                    </div>
+                </Link>
                 <h1 class="text-white font-bold">TeraQ</h1>
             </div>
             <button @click="isMobileMenuOpen = true" class="text-teraq-muted">
@@ -147,11 +148,11 @@ const topNav = [
                     class="p-6 flex items-center justify-between border-b border-white/5"
                 >
                     <div class="flex items-center gap-2">
-                        <div
-                            class="w-10 h-10 rounded-xl bg-gradient-to-br from-teraq-primary to-teraq-secondary flex items-center justify-center"
-                        >
-                            <span class="text-white font-bold text-xl">T</span>
-                        </div>
+                        <Link :href="route('home')" class="group">
+                            <div class="w-10 h-10 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center transition-transform group-hover:scale-110">
+                                <ApplicationLogo class="w-7 h-7" />
+                            </div>
+                        </Link>
                         <h1 class="text-white font-bold text-lg">TeraQ</h1>
                     </div>
                     <button

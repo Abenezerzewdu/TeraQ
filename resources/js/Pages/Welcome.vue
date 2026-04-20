@@ -23,6 +23,7 @@ import {
 } from "lucide-vue-next";
 import BaseCard from "@/Components/BaseCard.vue";
 import QueueButton from "@/Components/QueueButton.vue";
+import ApplicationLogo from "@/Components/ApplicationLogo.vue";
 
 defineProps({
     canLogin: {
@@ -75,14 +76,14 @@ const stats = [
                 class="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between"
             >
                 <div class="flex items-center gap-3 group cursor-pointer">
-                    <div
-                        class="w-10 h-10 rounded-xl bg-gradient-to-br from-teraq-primary to-teraq-secondary flex items-center justify-center shadow-lg shadow-teraq-primary/20 group-hover:scale-110 transition-transform duration-500"
-                    >
-                        <span class="text-white font-black text-xl">T</span>
-                    </div>
-                    <h1 class="text-white font-bold text-2xl tracking-tight">
-                        TeraQ
-                    </h1>
+                    <Link :href="route('home')" class="group flex items-center gap-3">
+                        <div class="w-10 h-10 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center shadow-lg transition-transform group-hover:scale-110">
+                            <ApplicationLogo class="w-7 h-7" />
+                        </div>
+                        <h1 class="text-white font-bold text-2xl tracking-tight">
+                            TeraQ
+                        </h1>
+                    </Link>
                 </div>
 
                 <div
@@ -403,10 +404,8 @@ const stats = [
             >
                 <div class="col-span-1 md:col-span-2">
                     <div class="flex items-center gap-3 mb-6">
-                        <div
-                            class="w-8 h-8 rounded-lg bg-teraq-primary flex items-center justify-center"
-                        >
-                            <span class="text-white font-bold">T</span>
+                        <div class="w-8 h-8 rounded-lg bg-white/5 border border-white/10 flex items-center justify-center">
+                            <ApplicationLogo class="w-5 h-5" />
                         </div>
                         <h2 class="text-white font-bold text-xl">TeraQ</h2>
                     </div>
