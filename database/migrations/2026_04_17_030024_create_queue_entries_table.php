@@ -34,7 +34,8 @@ return new class extends Migration
 
             $table->timestamp('joined_at')->useCurrent();
             $table->timestamp('served_at')->nullable();
-
+            $table->string('device_id')->nullable()->index();
+            $table->string('phone')->nullable()->index();
             $table->timestamps();
 
             // 🚀 Important for performance

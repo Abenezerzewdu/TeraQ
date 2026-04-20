@@ -39,6 +39,8 @@ public function store(Business $business, Request $request)
     {
         $validated = $request->validate([
             'name' => 'nullable|string|max:255',
+            'phone'=>'nullable|string|max:20',
+            'device_id' => 'required|string',
         ]);
 
         $name = $validated['name'] ?? 'Guest ' . rand(100, 999);

@@ -60,8 +60,17 @@ onUnmounted(() => {
     }
 });
 
+// generate or get device id
+let deviceId = localStorage.getItem("teraq_device_id");
+
+if (!deviceId) {
+    deviceId = crypto.randomUUID();
+    localStorage.setItem("teraq_device_id", deviceId);
+}
 const form = useForm({
     name: "",
+    phone: "",
+    device_id: deviceId,
 });
 
 const join = () => {
