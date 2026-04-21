@@ -51,6 +51,9 @@ public function store(Business $business, Request $request)
         return back()->with('info', "Welcome back! You're already at position #{$entry->position}.");
     }
 
+    public function leave(Request $request,Queue $queue,QueueService $service){
+     return $this->$service->leaveQueue($queue, $request);
+    }
 
     }
 
