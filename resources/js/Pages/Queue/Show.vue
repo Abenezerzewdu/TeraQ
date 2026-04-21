@@ -105,6 +105,16 @@ const currentServing = computed(() =>
     entriesList.value.find((e) => e.status === "serving"),
 );
 
+const userEntry = computed(() => 
+    entriesList.value.find(e => e.device_id === deviceId)
+);
+
+const myPosition = computed(() => {
+    if (!userEntry.value) return null;
+    const waitingEntries = entriesList.value.filter(e => e.status === 'waiting');
+    return waitingEntries.findIndex(e => e.id === userEntry.value.id) + 1;
+});
+
 // Colors for avatars
 const avatarColors = [
     "bg-blue-500/20 text-blue-400 border-blue-500/30",
@@ -279,6 +289,7 @@ const amenities = [
                                 <div
                                     :class="[
                                         getAvatarColor(entry.id),
+                                        entry.device_id === deviceId ? 'ring-4 ring-teraq-primary ring-offset-4 ring-offset-teraq-bg scale-110 z-10' : '',
                                         'w-14 h-14 rounded-full border-2 flex items-center justify-center font-black text-lg shadow-lg backdrop-blur-sm relative group cursor-pointer hover:scale-110 transition-transform active:scale-95',
                                     ]"
                                 >
@@ -287,6 +298,7 @@ const amenities = [
                                         class="animate-pulse"
                                         >★</span
                                     >
+                                    <span v-else-if="entry.device_id === deviceId">ME</span>
                                     <span v-else>{{ index + 1 }}</span>
 
                                     <!-- Status Badge -->
@@ -339,8 +351,32 @@ const amenities = [
                 </div>
             </div>
 
+            <!-- User Status Card (When in Queue) -->
+            <div v-if="userEntry" class="relative group">
+                <div class="absolute -inset-1 bg-gradient-to-r from-emerald-500 to-teal-500 rounded-[2.5rem] blur opacity-20 animate-pulse"></div>
+                <div class="relative glass-card bg-emerald-500/10 border-emerald-500/20 p-8 flex flex-col md:flex-row items-center justify-between gap-6">
+                    <div class="flex items-center gap-6 text-center md:text-left">
+                        <div class="w-20 h-20 rounded-2xl bg-emerald-500 flex items-center justify-center text-white shadow-lg shadow-emerald-500/20">
+                            <span class="text-3xl font-black">{{ myPosition }}</span>
+                        </div>
+                        <div>
+                            <h4 class="text-2xl font-black text-white italic">You're In Line!</h4>
+                            <p class="text-emerald-400/80 text-sm font-medium uppercase tracking-widest mt-1">
+                                {{ userEntry.user_name || 'Guest' }} • {{ myPosition === 1 ? 'You are next!' : `Wait for ${myPosition - 1} more` }}
+                            </p>
+                        </div>
+                    </div>
+                    
+                    <div class="flex flex-col items-center md:items-end gap-1">
+                        <span class="text-[10px] font-bold text-white/40 uppercase tracking-[0.2em]">Est. Service</span>
+                        <span class="text-2xl font-bold text-white">{{ (myPosition - 1) * queue.avg_service_time }} MIN</span>
+                    </div>
+                </div>
+            </div>
+
             <!-- Join Action -->
             <div
+                v-if="!userEntry"
                 class="glass-card p-8 bg-gradient-to-br from-teraq-surface to-transparent border-white/5 space-y-6"
             >
                 <div

@@ -34,7 +34,6 @@ public function store(Business $business, Request $request)
     return back()->with('success', 'Queue created');
 }
 
-    //join queue using QueueService
     public function join(Queue $queue, Request $request, QueueService $service)
     {
         $request->validate([
@@ -43,10 +42,13 @@ public function store(Business $business, Request $request)
             'device_id' => 'required|string',
         ]);
 
-        // $name = $validated['name'] ?? 'Guest ' . rand(100, 999);
-        $service->joinQueue($queue, $request);
+        $entry = $service->joinQueue($queue, $request);
 
-        return back()->with('success', 'You joined the queue successfully.');
+        if ($entry->wasRecentlyCreated) {
+            return back()->with('success', 'You joined the queue successfully.');
+        }
+
+        return back()->with('info', "Welcome back! You're already at position #{$entry->position}.");
     }
 
 

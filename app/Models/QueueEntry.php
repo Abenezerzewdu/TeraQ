@@ -11,6 +11,8 @@ class QueueEntry extends Model
      protected $fillable = [
         'queue_id',
         'user_name',
+        'device_id',
+        'phone',
         'position',
         'status',
         'joined_at',
