@@ -1,6 +1,6 @@
 <script setup>
-import { useForm, Head, Link } from "@inertiajs/vue3";
-import { ref, onMounted, onUnmounted, computed } from "vue";
+import { useForm, Head, Link, usePage } from "@inertiajs/vue3";
+import { ref, onMounted, onUnmounted, computed, watch } from "vue";
 import {
     ChevronLeft,
     Bell,
@@ -17,14 +17,20 @@ import {
     User,
     CheckCircle2,
     Info,
+    Phone,
 } from "lucide-vue-next";
 import BaseCard from "@/Components/BaseCard.vue";
 import QueueButton from "@/Components/QueueButton.vue";
+import Toast from "@/Components/Toast.vue";
 
 const props = defineProps({
     queue: Object,
     entries: Array,
 });
+
+const page = usePage();
+const showToast = ref(false);
+const toastMsg = ref("");
 
 // ✅ Real-time data sync
 const entriesList = ref([...props.entries]);
@@ -77,7 +83,17 @@ const join = () => {
     form.post(`/queues/${props.queue.slug}/join`, {
         preserveScroll: true,
         preserveState: true,
-        onSuccess: () => form.reset(),
+        onSuccess: () => {
+            if (form.phone && form.name) {
+                toastMsg.value = `Perfect! We'll notify you (${form.phone}) when ${form.name}'s turn is ready.`;
+            } else if (form.phone) {
+                toastMsg.value = `Success! We'll notify you at ${form.phone}. Next time, add your name to help us identify you!`;
+            } else {
+                toastMsg.value = "You're in! We recommend adding a phone number next time so we can notify you when it's your turn.";
+            }
+            showToast.value = true;
+            form.reset("name", "phone");
+        },
     });
 };
 
@@ -109,6 +125,13 @@ const amenities = [
 
 <template>
     <Head :title="queue.name" />
+
+    <!-- Toast Notification -->
+    <Toast 
+        v-if="showToast" 
+        :message="toastMsg" 
+        @close="showToast = false" 
+    />
 
     <div
         class="min-h-screen bg-teraq-bg text-white font-sans antialiased pb-24 overflow-x-hidden"
@@ -324,20 +347,34 @@ const amenities = [
                 >
                     <h4 class="text-xl font-bold">Ready to join?</h4>
                     <p class="text-teraq-muted text-xs font-medium">
-                        Just hit the button below to secure your spot.
+                        Fill in your details to stay in the loop.
                     </p>
                 </div>
 
                 <form @submit.prevent="join" class="space-y-4">
-                    <div class="relative group">
-                        <input
-                            v-model="form.name"
-                            placeholder="Your Name (Optional)"
-                            class="w-full bg-white/5 border-white/5 rounded-2xl px-6 py-5 text-lg text-white focus:ring-teraq-primary/30 focus:border-teraq-primary transition-all placeholder:text-teraq-muted/20"
-                        />
-                        <User
-                            class="absolute right-6 top-1/2 -translate-y-1/2 w-5 h-5 text-teraq-muted opacity-30 group-focus-within:opacity-100 transition-opacity"
-                        />
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div class="relative group">
+                            <input
+                                v-model="form.name"
+                                placeholder="Your Name (Optional)"
+                                class="w-full bg-white/5 border-white/5 rounded-2xl px-6 py-5 text-base text-white focus:ring-teraq-primary/30 focus:border-teraq-primary transition-all placeholder:text-teraq-muted/20"
+                            />
+                            <User
+                                class="absolute right-6 top-1/2 -translate-y-1/2 w-4 h-4 text-teraq-muted opacity-30 group-focus-within:opacity-100 transition-opacity"
+                            />
+                        </div>
+
+                        <div class="relative group">
+                            <input
+                                v-model="form.phone"
+                                type="tel"
+                                placeholder="Phone (Optional)"
+                                class="w-full bg-white/5 border-white/5 rounded-2xl px-6 py-5 text-base text-white focus:ring-teraq-primary/30 focus:border-teraq-primary transition-all placeholder:text-teraq-muted/20"
+                            />
+                            <Phone
+                                class="absolute right-6 top-1/2 -translate-y-1/2 w-4 h-4 text-teraq-muted opacity-30 group-focus-within:opacity-100 transition-opacity"
+                            />
+                        </div>
                     </div>
 
                     <button
