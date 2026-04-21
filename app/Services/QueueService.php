@@ -36,7 +36,7 @@ if ($existing) {
                 ->max('position') ?? 0;
                 //create an entry to the queue
      $entry=$queue->entries()->create([
-                'user_name' => $request->name,
+                'user_name' => $request->name ?? 'Guest',
                  'device_id' => $request->device_id,
                  'phone' => $request->phone,
                  'position' => $lastPosition + 1,

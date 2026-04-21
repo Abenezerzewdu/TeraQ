@@ -19,7 +19,7 @@ return new class extends Migration
                   ->cascadeOnDelete();
 
             // For now, no auth → just name
-            $table->string('user_name');
+            $table->string('user_name')->nullable();
 
             // Position in queue
             $table->integer('position');
