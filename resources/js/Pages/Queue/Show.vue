@@ -22,6 +22,7 @@ import {
 import BaseCard from "@/Components/BaseCard.vue";
 import QueueButton from "@/Components/QueueButton.vue";
 import Toast from "@/Components/Toast.vue";
+import InputError from "@/Components/InputError.vue";
 
 const props = defineProps({
     queue: Object,
@@ -358,10 +359,12 @@ const amenities = [
                                 v-model="form.name"
                                 placeholder="Your Name (Optional)"
                                 class="w-full bg-white/5 border-white/5 rounded-2xl px-6 py-5 text-base text-white focus:ring-teraq-primary/30 focus:border-teraq-primary transition-all placeholder:text-teraq-muted/20"
+                                :class="{ 'border-red-500/50': form.errors.name }"
                             />
                             <User
                                 class="absolute right-6 top-1/2 -translate-y-1/2 w-4 h-4 text-teraq-muted opacity-30 group-focus-within:opacity-100 transition-opacity"
                             />
+                            <InputError :message="form.errors.name" />
                         </div>
 
                         <div class="relative group">
@@ -370,10 +373,12 @@ const amenities = [
                                 type="tel"
                                 placeholder="Phone (Optional)"
                                 class="w-full bg-white/5 border-white/5 rounded-2xl px-6 py-5 text-base text-white focus:ring-teraq-primary/30 focus:border-teraq-primary transition-all placeholder:text-teraq-muted/20"
+                                :class="{ 'border-red-500/50': form.errors.phone }"
                             />
                             <Phone
                                 class="absolute right-6 top-1/2 -translate-y-1/2 w-4 h-4 text-teraq-muted opacity-30 group-focus-within:opacity-100 transition-opacity"
                             />
+                            <InputError :message="form.errors.phone" />
                         </div>
                     </div>
 
