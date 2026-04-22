@@ -139,6 +139,17 @@ const join = () => {
     });
 };
 
+const updatePhone = () => {
+    form.post(`/queues/${props.queue.slug}/update-phone`, {
+        preserveScroll: true,
+        onSuccess: () => {
+            toastMsg.value = "Awesome! We'll notify you when it's your turn.";
+            showToast.value = true;
+            form.reset("phone");
+        },
+    });
+};
+
 const leave = () => {
     if (confirm("Are you sure you want to leave the queue?")) {
         form.post(`/queues/${props.queue.slug}/leave`, {
@@ -443,6 +454,32 @@ const amenities = [
                                         : `Wait for ${myPosition - 1} more`
                                 }}
                             </p>
+                        </div>
+                    </div>
+
+                    <!-- Phone Update Section (Only if missing) -->
+                    <div v-if="!userEntry.phone" class="w-full md:w-auto flex flex-col gap-2">
+                        <div class="flex flex-col gap-1">
+                            <span class="text-[10px] font-bold text-emerald-400/60 uppercase tracking-widest">Get Notified</span>
+                            <div class="flex gap-2">
+                                <div class="relative group flex-1">
+                                    <input 
+                                        v-model="form.phone"
+                                        type="tel"
+                                        placeholder="Enter Phone"
+                                        class="w-full bg-emerald-500/10 border-emerald-500/20 rounded-xl px-4 py-2 text-sm text-white placeholder:text-emerald-500/30 focus:ring-emerald-500/30 focus:border-emerald-500 transition-all"
+                                    />
+                                    <Phone class="absolute right-3 top-1/2 -translate-y-1/2 w-3 h-3 text-emerald-500 opacity-40" />
+                                </div>
+                                <button 
+                                    @click="updatePhone"
+                                    class="px-4 py-2 bg-emerald-500 text-teraq-bg rounded-xl text-[10px] font-black uppercase tracking-widest hover:scale-105 active:scale-95 transition-all disabled:opacity-50"
+                                    :disabled="form.processing || !form.phone"
+                                >
+                                    Notify Me
+                                </button>
+                            </div>
+                            <InputError :message="form.errors.phone" />
                         </div>
                     </div>
 

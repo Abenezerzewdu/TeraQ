@@ -104,4 +104,20 @@ if ($existing) {
             return $next;
         });
     }
+
+    public function updatePhone(Queue $queue, Request $request)
+    {
+        $entry = $queue->entries()
+            ->where('device_id', $request->device_id)
+            ->whereIn('status', ['waiting', 'serving'])
+            ->first();
+
+        if ($entry) {
+            $entry->update([
+                'phone' => $request->phone,
+            ]);
+        }
+
+        return $entry;
+    }
 }

@@ -17,7 +17,10 @@ class QueueController extends Controller
 
         return Inertia::render('Queue/Show', [
             'queue' => $queue,
-            'entries' => $queue->entries()->orderBy('position')->get(),
+            'entries' => $queue->entries()
+                ->whereIn('status', ['waiting', 'serving'])
+                ->orderBy('position')
+                ->get(),
         ]);
     }
     
@@ -66,6 +69,22 @@ public function store(Business $business, Request $request)
         }
 
         return back()->with('info', 'No more users in line.');
+    }
+
+    public function updatePhone(Request $request, Queue $queue, QueueService $service)
+    {
+        $request->validate([
+            'phone' => 'required|string|max:20',
+            'device_id' => 'required|string',
+        ]);
+
+        $entry = $service->updatePhone($queue, $request);
+
+        if ($entry) {
+            return back()->with('success', 'Phone number updated! We will notify you when it is your turn.');
+        }
+
+        return back()->with('error', 'Could not find your queue entry.');
     }
 
     }
