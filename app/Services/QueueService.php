@@ -2,9 +2,11 @@
 namespace App\Services;
 
 use App\Events\UserJoinedQueue;
+use App\Events\UserLeftQueue;
 use App\Models\Queue;
 use App\Models\QueueEntry;
 use Illuminate\Http\Request;
+use Illuminate\Queue\Events\QueueBusy;
 use Illuminate\Support\Facades\DB;
 
 class QueueService
@@ -45,6 +47,61 @@ if ($existing) {
             //trigger event for websocket
                   event(new UserJoinedQueue($entry));
             return $entry;
+        });
+    }
+
+    public function leaveQueue(Queue $queue, Request $request)
+    {
+        $entry = $queue->entries()->where('device_id', $request->device_id)->where('status', 'waiting')
+            ->first();
+
+        if (!$entry) {
+            return null;
+        }
+
+        $entry->update([
+            'status' => 'left',
+        ]);
+
+        $queue->entries()
+            ->where('status', 'waiting')
+            ->where('position', '>', $entry->position)
+            ->decrement('position');
+
+        event(new UserLeftQueue($entry));
+        return $entry;
+    }
+
+    public function startServingNext(Queue $queue)
+    {
+        return DB::transaction(function () use ($queue) {
+            // Finish any currently serving
+            $queue->entries()->where('status', 'serving')->update([
+                'status' => 'done',
+                'served_at' => now(),
+            ]);
+
+            // Get the next in line
+            $next = $queue->entries()
+                ->where('status', 'waiting')
+                ->orderBy('position')
+                ->first();
+
+            if ($next) {
+                $next->update([
+                    'status' => 'serving',
+                    'position' => 0,
+                ]);
+
+                // Shift everyone else up
+                $queue->entries()
+                    ->where('status', 'waiting')
+                    ->decrement('position');
+
+                event(new \App\Events\UserServingStarted($next));
+            }
+
+            return $next;
         });
     }
 }

@@ -51,8 +51,21 @@ public function store(Business $business, Request $request)
         return back()->with('info', "Welcome back! You're already at position #{$entry->position}.");
     }
 
-    public function leave(Request $request,Queue $queue,QueueService $service){
-     return $this->$service->leaveQueue($queue, $request);
+    public function leave(Request $request, Queue $queue, QueueService $service)
+    {
+        $service->leaveQueue($queue, $request);
+        return back()->with('info', 'You have left the queue.');
+    }
+
+    public function startNext(Queue $queue, QueueService $service)
+    {
+        $entry = $service->startServingNext($queue);
+        
+        if ($entry) {
+            return back()->with('success', "Now serving {$entry->user_name}");
+        }
+
+        return back()->with('info', 'No more users in line.');
     }
 
     }

@@ -56,6 +56,37 @@ onMounted(() => {
                 if (index !== -1) {
                     entriesList.value.splice(index, 1);
                 }
+            })
+            .listen(".user.left", (e) => {
+                const leftEntry = entriesList.value.find(entry => entry.id === e.entry.id);
+                if (leftEntry) {
+                    // Update positions for those behind
+                    entriesList.value.forEach(entry => {
+                        if (entry.status === 'waiting' && entry.position > leftEntry.position) {
+                            entry.position--;
+                        }
+                    });
+                    // Remove the entry
+                    entriesList.value = entriesList.value.filter(entry => entry.id !== e.entry.id);
+                }
+            })
+            .listen(".user.started", (e) => {
+                // Someone started serving
+                const entry = entriesList.value.find(ent => ent.id === e.entry.id);
+                if (entry) {
+                    entry.status = 'serving';
+                    entry.position = 0;
+                    
+                    // Everyone else who was waiting moves up
+                    entriesList.value.forEach(ent => {
+                        if (ent.status === 'waiting' && ent.id !== entry.id) {
+                            ent.position--;
+                        }
+                    });
+                } else {
+                    // Entry not in list (unlikely), push it as serving
+                    entriesList.value.push(e.entry);
+                }
             });
     }
 });
@@ -96,6 +127,18 @@ const join = () => {
             form.reset("name", "phone");
         },
     });
+};
+
+const leave = () => {
+    if (confirm("Are you sure you want to leave the queue?")) {
+        form.post(`/queues/${props.queue.slug}/leave`, {
+            preserveScroll: true,
+            onSuccess: () => {
+                toastMsg.value = "You have left the queue.";
+                showToast.value = true;
+            }
+        });
+    }
 };
 
 const waitingCount = computed(
@@ -367,10 +410,19 @@ const amenities = [
                         </div>
                     </div>
                     
-                    <div class="flex flex-col items-center md:items-end gap-1">
-                        <span class="text-[10px] font-bold text-white/40 uppercase tracking-[0.2em]">Est. Service</span>
-                        <span class="text-2xl font-bold text-white">{{ (myPosition - 1) * queue.avg_service_time }} MIN</span>
+                        <div class="flex flex-col items-center md:items-end gap-1">
+                            <span class="text-[10px] font-bold text-white/40 uppercase tracking-[0.2em]">Est. Service</span>
+                            <span class="text-2xl font-bold text-white">{{ (myPosition - 1) * queue.avg_service_time }} MIN</span>
+                        </div>
                     </div>
+
+                    <button 
+                        @click="leave" 
+                        class="w-full mt-4 py-3 bg-red-500/10 hover:bg-red-500/20 text-red-500 border border-red-500/20 rounded-xl text-[10px] font-bold uppercase tracking-widest transition-all"
+                        :disabled="form.processing"
+                    >
+                        {{ form.processing ? 'Leaving...' : 'Leave Line' }}
+                    </button>
                 </div>
             </div>
 

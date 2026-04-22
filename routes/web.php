@@ -43,7 +43,8 @@ Route::get('/support',function(){
    return Inertia::render('Support');
 })->name('support');
 
-Route::post('/queues/{queue}/leave', [QueueController::class, 'leave']);
+Route::post('/queues/{queue}/leave', [QueueController::class, 'leave'])->name('queues.leave');
+Route::post('/queues/{queue}/start-next', [QueueController::class, 'startNext'])->name('queues.start-next');
 
 Route::post('/businesses/{business}/queues', [QueueController::class, 'store']);
 require __DIR__.'/auth.php';
