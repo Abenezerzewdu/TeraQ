@@ -25,11 +25,11 @@ class NotificationService
                 'message' => $message,
             ]);
 
-            if ($response->failed()) {
-                Log::error('TextBee failed', [
-                    'body' => $response->body()
-                ]);
-            }
+           if ($response && method_exists($response, 'failed') && $response->failed()) {
+    Log::error('TextBee failed', [
+        'body' => $response->body()
+    ]);
+}
 
         } catch (\Exception $e) {
             Log::error('SMS Exception: ' . $e->getMessage());
