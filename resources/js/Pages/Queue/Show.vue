@@ -58,28 +58,37 @@ onMounted(() => {
                 }
             })
             .listen(".user.left", (e) => {
-                const leftEntry = entriesList.value.find(entry => entry.id === e.entry.id);
+                const leftEntry = entriesList.value.find(
+                    (entry) => entry.id === e.entry.id,
+                );
                 if (leftEntry) {
                     // Update positions for those behind
-                    entriesList.value.forEach(entry => {
-                        if (entry.status === 'waiting' && entry.position > leftEntry.position) {
+                    entriesList.value.forEach((entry) => {
+                        if (
+                            entry.status === "waiting" &&
+                            entry.position > leftEntry.position
+                        ) {
                             entry.position--;
                         }
                     });
                     // Remove the entry
-                    entriesList.value = entriesList.value.filter(entry => entry.id !== e.entry.id);
+                    entriesList.value = entriesList.value.filter(
+                        (entry) => entry.id !== e.entry.id,
+                    );
                 }
             })
             .listen(".user.started", (e) => {
                 // Someone started serving
-                const entry = entriesList.value.find(ent => ent.id === e.entry.id);
+                const entry = entriesList.value.find(
+                    (ent) => ent.id === e.entry.id,
+                );
                 if (entry) {
-                    entry.status = 'serving';
+                    entry.status = "serving";
                     entry.position = 0;
-                    
+
                     // Everyone else who was waiting moves up
-                    entriesList.value.forEach(ent => {
-                        if (ent.status === 'waiting' && ent.id !== entry.id) {
+                    entriesList.value.forEach((ent) => {
+                        if (ent.status === "waiting" && ent.id !== entry.id) {
                             ent.position--;
                         }
                     });
@@ -121,7 +130,8 @@ const join = () => {
             } else if (form.phone) {
                 toastMsg.value = `Success! We'll notify you at ${form.phone}. Next time, add your name to help us identify you!`;
             } else {
-                toastMsg.value = "You're in! We recommend adding a phone number next time so we can notify you when it's your turn.";
+                toastMsg.value =
+                    "You're in! We recommend adding a phone number next time so we can notify you when it's your turn.";
             }
             showToast.value = true;
             form.reset("name", "phone");
@@ -136,7 +146,7 @@ const leave = () => {
             onSuccess: () => {
                 toastMsg.value = "You have left the queue.";
                 showToast.value = true;
-            }
+            },
         });
     }
 };
@@ -148,14 +158,20 @@ const currentServing = computed(() =>
     entriesList.value.find((e) => e.status === "serving"),
 );
 
-const userEntry = computed(() => 
-    entriesList.value.find(e => e.device_id === deviceId)
+const userEntry = computed(() =>
+    entriesList.value.find(
+        (e) =>
+            e.device_id === deviceId &&
+            (e.status === "waiting" || e.status === "serving"),
+    ),
 );
 
 const myPosition = computed(() => {
     if (!userEntry.value) return null;
-    const waitingEntries = entriesList.value.filter(e => e.status === 'waiting');
-    return waitingEntries.findIndex(e => e.id === userEntry.value.id) + 1;
+    const waitingEntries = entriesList.value.filter(
+        (e) => e.status === "waiting",
+    );
+    return waitingEntries.findIndex((e) => e.id === userEntry.value.id) + 1;
 });
 
 // Colors for avatars
@@ -181,11 +197,7 @@ const amenities = [
     <Head :title="queue.name" />
 
     <!-- Toast Notification -->
-    <Toast 
-        v-if="showToast" 
-        :message="toastMsg" 
-        @close="showToast = false" 
-    />
+    <Toast v-if="showToast" :message="toastMsg" @close="showToast = false" />
 
     <div
         class="min-h-screen bg-teraq-bg text-white font-sans antialiased pb-24 overflow-x-hidden"
@@ -332,7 +344,9 @@ const amenities = [
                                 <div
                                     :class="[
                                         getAvatarColor(entry.id),
-                                        entry.device_id === deviceId ? 'ring-4 ring-teraq-primary ring-offset-4 ring-offset-teraq-bg scale-110 z-10' : '',
+                                        entry.device_id === deviceId
+                                            ? 'ring-4 ring-teraq-primary ring-offset-4 ring-offset-teraq-bg scale-110 z-10'
+                                            : '',
                                         'w-14 h-14 rounded-full border-2 flex items-center justify-center font-black text-lg shadow-lg backdrop-blur-sm relative group cursor-pointer hover:scale-110 transition-transform active:scale-95',
                                     ]"
                                 >
@@ -341,7 +355,10 @@ const amenities = [
                                         class="animate-pulse"
                                         >★</span
                                     >
-                                    <span v-else-if="entry.device_id === deviceId">ME</span>
+                                    <span
+                                        v-else-if="entry.device_id === deviceId"
+                                        >ME</span
+                                    >
                                     <span v-else>{{ index + 1 }}</span>
 
                                     <!-- Status Badge -->
@@ -396,34 +413,60 @@ const amenities = [
 
             <!-- User Status Card (When in Queue) -->
             <div v-if="userEntry" class="relative group">
-                <div class="absolute -inset-1 bg-gradient-to-r from-emerald-500 to-teal-500 rounded-[2.5rem] blur opacity-20 animate-pulse"></div>
-                <div class="relative glass-card bg-emerald-500/10 border-emerald-500/20 p-8 flex flex-col md:flex-row items-center justify-between gap-6">
-                    <div class="flex items-center gap-6 text-center md:text-left">
-                        <div class="w-20 h-20 rounded-2xl bg-emerald-500 flex items-center justify-center text-white shadow-lg shadow-emerald-500/20">
-                            <span class="text-3xl font-black">{{ myPosition }}</span>
+                <div
+                    class="absolute -inset-1 bg-gradient-to-r from-emerald-500 to-teal-500 rounded-[2.5rem] blur opacity-20 animate-pulse"
+                ></div>
+                <div
+                    class="relative glass-card bg-emerald-500/10 border-emerald-500/20 p-8 flex flex-col md:flex-row items-center justify-between gap-6"
+                >
+                    <div
+                        class="flex items-center gap-6 text-center md:text-left"
+                    >
+                        <div
+                            class="w-20 h-20 rounded-2xl bg-emerald-500 flex items-center justify-center text-white shadow-lg shadow-emerald-500/20"
+                        >
+                            <span class="text-3xl font-black">{{
+                                myPosition
+                            }}</span>
                         </div>
                         <div>
-                            <h4 class="text-2xl font-black text-white italic">You're In Line!</h4>
-                            <p class="text-emerald-400/80 text-sm font-medium uppercase tracking-widest mt-1">
-                                {{ userEntry.user_name || 'Guest' }} • {{ myPosition === 1 ? 'You are next!' : `Wait for ${myPosition - 1} more` }}
+                            <h4 class="text-2xl font-black text-white italic">
+                                You're In Line!
+                            </h4>
+                            <p
+                                class="text-emerald-400/80 text-sm font-medium uppercase tracking-widest mt-1"
+                            >
+                                {{ userEntry.user_name || "Guest" }} •
+                                {{
+                                    myPosition === 1
+                                        ? "You are next!"
+                                        : `Wait for ${myPosition - 1} more`
+                                }}
                             </p>
                         </div>
                     </div>
-                    
-                        <div class="flex flex-col items-center md:items-end gap-1">
-                            <span class="text-[10px] font-bold text-white/40 uppercase tracking-[0.2em]">Est. Service</span>
-                            <span class="text-2xl font-bold text-white">{{ (myPosition - 1) * queue.avg_service_time }} MIN</span>
-                        </div>
-                    </div>
 
-                    <button 
-                        @click="leave" 
-                        class="w-full mt-4 py-3 bg-red-500/10 hover:bg-red-500/20 text-red-500 border border-red-500/20 rounded-xl text-[10px] font-bold uppercase tracking-widest transition-all"
-                        :disabled="form.processing"
-                    >
-                        {{ form.processing ? 'Leaving...' : 'Leave Line' }}
-                    </button>
+                    <div class="flex flex-col items-center md:items-end gap-1">
+                        <span
+                            class="text-[10px] font-bold text-white/40 uppercase tracking-[0.2em]"
+                            >Est. Service</span
+                        >
+                        <span class="text-2xl font-bold text-white"
+                            >{{
+                                (myPosition - 1) * queue.avg_service_time
+                            }}
+                            MIN</span
+                        >
+                    </div>
                 </div>
+
+                <button
+                    @click="leave"
+                    class="w-full mt-4 py-3 bg-red-500/10 hover:bg-red-500/20 text-red-500 border border-red-500/20 rounded-xl text-[10px] font-bold uppercase tracking-widest transition-all cursor-pointer relative z-20"
+                    :disabled="form.processing"
+                >
+                    {{ form.processing ? "Leaving..." : "Leave Line" }}
+                </button>
             </div>
 
             <!-- Join Action -->
@@ -447,7 +490,9 @@ const amenities = [
                                 v-model="form.name"
                                 placeholder="Your Name (Optional)"
                                 class="w-full bg-white/5 border-white/5 rounded-2xl px-6 py-5 text-base text-white focus:ring-teraq-primary/30 focus:border-teraq-primary transition-all placeholder:text-teraq-muted/20"
-                                :class="{ 'border-red-500/50': form.errors.name }"
+                                :class="{
+                                    'border-red-500/50': form.errors.name,
+                                }"
                             />
                             <User
                                 class="absolute right-6 top-1/2 -translate-y-1/2 w-4 h-4 text-teraq-muted opacity-30 group-focus-within:opacity-100 transition-opacity"
@@ -461,7 +506,9 @@ const amenities = [
                                 type="tel"
                                 placeholder="Phone (Optional)"
                                 class="w-full bg-white/5 border-white/5 rounded-2xl px-6 py-5 text-base text-white focus:ring-teraq-primary/30 focus:border-teraq-primary transition-all placeholder:text-teraq-muted/20"
-                                :class="{ 'border-red-500/50': form.errors.phone }"
+                                :class="{
+                                    'border-red-500/50': form.errors.phone,
+                                }"
                             />
                             <Phone
                                 class="absolute right-6 top-1/2 -translate-y-1/2 w-4 h-4 text-teraq-muted opacity-30 group-focus-within:opacity-100 transition-opacity"
