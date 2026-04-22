@@ -3,6 +3,7 @@
 use App\Http\Controllers\BusinessController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\QueueController;
+use App\Services\NotificationService;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -48,4 +49,13 @@ Route::post('/queues/{queue}/update-phone', [QueueController::class, 'updatePhon
 Route::post('/queues/{queue}/start-next', [QueueController::class, 'startNext'])->name('queues.start-next');
 
 Route::post('/businesses/{business}/queues', [QueueController::class, 'store']);
+
+Route::get('/test-sms', function () {
+    app(NotificationService::class)->sendSMS(
+        '+251941031450', // your phone
+        'TeraQ test message'
+    );
+
+    return 'SMS sent (check your phone)';
+});
 require __DIR__.'/auth.php';
