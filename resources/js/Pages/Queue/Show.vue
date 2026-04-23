@@ -32,6 +32,31 @@ const props = defineProps({
 const page = usePage();
 const showToast = ref(false);
 const toastMsg = ref("");
+const notificationPermission = ref(
+    typeof Notification !== "undefined" ? Notification.permission : "denied",
+);
+
+const requestNotificationPermission = async () => {
+    if (typeof Notification === "undefined") return;
+    const permission = await Notification.requestPermission();
+    notificationPermission.value = permission;
+
+    if (permission === "granted") {
+        new Notification("Notifications Enabled!", {
+            body: "We'll alert you when it's your turn.",
+            icon: "/favicon.ico",
+        });
+    }
+};
+
+const sendBrowserNotification = (title, body) => {
+    if (notificationPermission.value === "granted") {
+        new Notification(title, {
+            body,
+            icon: "/favicon.ico",
+        });
+    }
+};
 
 // ✅ Real-time data sync
 const entriesList = ref([...props.entries]);
@@ -82,6 +107,17 @@ onMounted(() => {
                 const entry = entriesList.value.find(
                     (ent) => ent.id === e.entry.id,
                 );
+                
+                // If it's the CURRENT user being served
+                if (e.entry.device_id === deviceId) {
+                     sendBrowserNotification(
+                        "It's Your Turn!",
+                        `Please head to the counter for ${props.queue.name}.`
+                    );
+                    toastMsg.value = "It's your turn! Head to the counter.";
+                    showToast.value = true;
+                }
+
                 if (entry) {
                     entry.status = "serving";
                     entry.position = 0;
@@ -90,6 +126,14 @@ onMounted(() => {
                     entriesList.value.forEach((ent) => {
                         if (ent.status === "waiting" && ent.id !== entry.id) {
                             ent.position--;
+                            
+                            // If the current user just moved to position 1
+                            if (ent.device_id === deviceId && ent.position === 1) {
+                                sendBrowserNotification(
+                                    "You're Next!",
+                                    `You are now at position 1 for ${props.queue.name}. Get ready!`
+                                );
+                            }
                         }
                     });
                 } else {
@@ -455,6 +499,18 @@ const amenities = [
                                 }}
                             </p>
                         </div>
+                    </div>
+
+                    <!-- Notification Permission Button -->
+                    <div v-if="notificationPermission !== 'granted'" class="flex items-center gap-2">
+                        <button 
+                            @click="requestNotificationPermission"
+                            class="group relative flex items-center gap-2 px-4 py-2 bg-white/10 hover:bg-white/20 border border-white/10 rounded-xl transition-all"
+                        >
+                            <Bell class="w-4 h-4 text-emerald-400 group-hover:animate-bounce" />
+                            <span class="text-[10px] font-bold uppercase tracking-widest">Alert Me</span>
+                            <div class="absolute -top-1 -right-1 w-2 h-2 bg-emerald-500 rounded-full animate-ping"></div>
+                        </button>
                     </div>
 
                     <!-- Phone Update Section (Only if missing) -->
