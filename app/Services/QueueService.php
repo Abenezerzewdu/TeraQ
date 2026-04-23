@@ -120,4 +120,32 @@ if ($existing) {
 
         return $entry;
     }
-}
+    public function removeEntry(Queue $queue, QueueEntry $entry)
+    {
+        return DB::transaction(function () use ($queue, $entry) {
+            if ($entry->queue_id !== $queue->id) {
+                return false;
+            }
+
+            $oldPosition = $entry->position;
+            $oldStatus = $entry->status;
+
+            $entry->update([
+                'status' => 'removed',
+                'position' => 0,
+            ]);
+
+            // If it was waiting, move others up
+            if ($oldStatus === 'waiting') {
+                $queue->entries()
+                    ->where('status', 'waiting')
+                    ->where('position', '>', $oldPosition)
+                    ->decrement('position');
+            }
+
+            event(new \App\Events\UserRemoved($entry));
+
+            return true;
+        });
+    }
+}

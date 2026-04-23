@@ -53,7 +53,10 @@ public function show(Business $business)
             'location' => 'nullable|string',
         ]);
 
-        $business = Business::create($validated);
+        $business = Business::create([
+            ...$validated,
+            'owner_id' => auth()->id(),
+        ]);
 
         return redirect()->route('business.show', $business);
     }
