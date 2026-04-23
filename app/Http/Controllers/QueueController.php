@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Business;
 use App\Models\Queue;
+use App\Models\QueueEntry;
 use App\Services\QueueService;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
@@ -17,6 +18,7 @@ class QueueController extends Controller
 
         return Inertia::render('Queue/Show', [
             'queue' => $queue,
+            'isOwner' => auth()->id() === $queue->business->owner_id,
             'entries' => $queue->entries()
                 ->whereIn('status', ['waiting', 'serving'])
                 ->orderBy('position')
@@ -87,5 +89,22 @@ public function store(Business $business, Request $request)
         return back()->with('error', 'Could not find your queue entry.');
     }
 
+    public function removeEntry(Queue $queue, QueueEntry $entry, QueueService $service)
+    {
+        // Ensure the entry belongs to the queue
+        if ($entry->queue_id !== $queue->id) {
+            return back()->with('error', 'Invalid entry.');
+        }
+
+        // Ensure the user is the owner
+        if (auth()->id() !== $queue->business->owner_id) {
+            abort(403);
+        }
+
+        $service->removeEntry($queue, $entry);
+
+        return back()->with('success', 'User removed from queue.');
     }
+
+}
 

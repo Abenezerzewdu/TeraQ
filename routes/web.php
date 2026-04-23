@@ -47,6 +47,7 @@ Route::get('/support',function(){
 Route::post('/queues/{queue}/leave', [QueueController::class, 'leave'])->name('queues.leave');
 Route::post('/queues/{queue}/update-phone', [QueueController::class, 'updatePhone'])->name('queues.update-phone');
 Route::post('/queues/{queue}/start-next', [QueueController::class, 'startNext'])->name('queues.start-next');
+Route::post('/queues/{queue}/entries/{entry}/remove', [QueueController::class, 'removeEntry'])->name('queues.remove-entry');
 
 Route::post('/businesses/{business}/queues', [QueueController::class, 'store']);
 

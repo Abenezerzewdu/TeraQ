@@ -14,10 +14,11 @@ import {
     Accessibility,
     CloudSun,
     ArrowRight,
-    User,
-    CheckCircle2,
-    Info,
     Phone,
+    Trash2,
+    Play,
+    UserMinus,
+    CheckCircle,
 } from "lucide-vue-next";
 import BaseCard from "@/Components/BaseCard.vue";
 import QueueButton from "@/Components/QueueButton.vue";
@@ -27,6 +28,7 @@ import InputError from "@/Components/InputError.vue";
 const props = defineProps({
     queue: Object,
     entries: Array,
+    isOwner: Boolean,
 });
 
 const page = usePage();
@@ -140,6 +142,31 @@ onMounted(() => {
                     // Entry not in list (unlikely), push it as serving
                     entriesList.value.push(e.entry);
                 }
+            })
+            .listen(".user.removed", (e) => {
+                const removedEntry = entriesList.value.find(
+                    (entry) => entry.id === e.entry.id,
+                );
+                if (removedEntry) {
+                    // Update positions for those behind
+                    entriesList.value.forEach((entry) => {
+                        if (
+                            entry.status === "waiting" &&
+                            entry.position > removedEntry.position
+                        ) {
+                            entry.position--;
+                        }
+                    });
+                    // Remove the entry
+                    entriesList.value = entriesList.value.filter(
+                        (entry) => entry.id !== e.entry.id,
+                    );
+
+                    if (e.entry.device_id === deviceId) {
+                        toastMsg.value = "The business has removed you from the queue.";
+                        showToast.value = true;
+                    }
+                }
             });
     }
 });
@@ -200,6 +227,27 @@ const leave = () => {
             preserveScroll: true,
             onSuccess: () => {
                 toastMsg.value = "You have left the queue.";
+                showToast.value = true;
+            },
+        });
+    }
+};
+
+const startNext = () => {
+    form.post(`/queues/${props.queue.slug}/start-next`, {
+        preserveScroll: true,
+        onSuccess: () => {
+            // Echo will handle the update
+        },
+    });
+};
+
+const removeEntry = (entryId) => {
+    if (confirm("Remove this person from the queue?")) {
+        form.post(`/queues/${props.queue.slug}/entries/${entryId}/remove`, {
+            preserveScroll: true,
+            onSuccess: () => {
+                toastMsg.value = "User removed.";
                 showToast.value = true;
             },
         });
@@ -316,6 +364,39 @@ const amenities = [
                 <p class="text-teraq-muted text-sm font-medium">
                     Wait for your turn comfortably while we handle the rest.
                 </p>
+            </div>
+
+            <!-- Business Management Panel -->
+            <div v-if="isOwner" class="relative group">
+                <div class="absolute -inset-1 bg-gradient-to-r from-orange-500 to-red-500 rounded-[2.5rem] blur opacity-20 animate-pulse"></div>
+                <div class="relative glass-card bg-orange-500/10 border-orange-500/20 p-8">
+                    <div class="flex flex-col md:flex-row items-center justify-between gap-6">
+                        <div class="flex items-center gap-4">
+                            <div class="w-12 h-12 rounded-2xl bg-orange-500 flex items-center justify-center text-white shadow-lg">
+                                <Zap class="w-6 h-6 fill-white" />
+                            </div>
+                            <div>
+                                <h4 class="text-xl font-black text-white">Management Console</h4>
+                                <p class="text-orange-400/80 text-[10px] font-bold uppercase tracking-widest mt-1">Control the flow</p>
+                            </div>
+                        </div>
+                        
+                        <div class="flex items-center gap-3">
+                            <div class="text-right mr-4 hidden md:block">
+                                <p class="text-[10px] font-bold text-white/40 uppercase tracking-widest">Total Waiting</p>
+                                <p class="text-2xl font-black text-white">{{ waitingCount }}</p>
+                            </div>
+                            <button 
+                                @click="startNext"
+                                class="flex items-center gap-3 px-8 py-4 bg-orange-500 hover:bg-orange-600 text-white rounded-2xl font-black uppercase tracking-widest transition-all shadow-xl shadow-orange-500/20 hover:-translate-y-1 active:scale-95 disabled:opacity-50"
+                                :disabled="form.processing || waitingCount === 0"
+                            >
+                                <Play class="w-5 h-5 fill-white" />
+                                Call Next
+                            </button>
+                        </div>
+                    </div>
+                </div>
             </div>
 
             <!-- Wait Time & Progress -->
@@ -436,6 +517,16 @@ const amenities = [
                                                 : "Waiting..."
                                         }}
                                     </div>
+
+                                    <!-- Quick Remove (Owner Only) -->
+                                    <button 
+                                        v-if="isOwner"
+                                        @click.stop="removeEntry(entry.id)"
+                                        class="absolute -top-2 -left-2 w-6 h-6 bg-red-500 rounded-full border-2 border-teraq-bg flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity hover:scale-110 active:scale-90 shadow-lg"
+                                        title="Remove from queue"
+                                    >
+                                        <Trash2 class="w-3 h-3 text-white" />
+                                    </button>
                                 </div>
 
                                 <!-- Connection line (if not last) -->
