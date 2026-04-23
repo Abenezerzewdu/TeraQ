@@ -83,6 +83,9 @@ public function store(Business $business, Request $request)
         $entry = $service->updatePhone($queue, $request);
 
         if ($entry) {
+            // Send welcome SMS now that we have the phone number
+            app(\App\Services\NotificationService::class)->sendWelcomeSMS($entry);
+            
             return back()->with('success', 'Phone number updated! We will notify you when it is your turn.');
         }
 

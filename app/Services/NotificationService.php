@@ -16,9 +16,14 @@ class NotificationService
     }
     public function sendSMS($phone, $message)
     {
-        $apiKey = env('TEXTBEE_API_KEY');
-        $baseUrl = env('TEXTBEE_BASE_URL', 'https://api.textbee.dev');
-        $deviceId = env('TEXTBEE_DEVICE_ID', '69e8bf82b5cd3ce4c72b8d46');
+        $apiKey = config('services.textbee.api_key');
+        $baseUrl = config('services.textbee.base_url', 'https://api.textbee.dev');
+        $deviceId = config('services.textbee.device_id');
+
+        if (!$apiKey || !$deviceId) {
+            Log::error('TextBee Configuration missing.');
+            return null;
+        }
 
         try {
             $response = Http::withHeaders([
@@ -30,8 +35,11 @@ class NotificationService
                 'deviceId' => $deviceId,
             ]);
 
-            // We avoid calling any methods on $response here to prevent "undefined method" errors.
-            // Laravel will log errors if the request itself fails.
+            if ($response->failed()) {
+                Log::error('TextBee API Error: ' . $response->body());
+            } else {
+                Log::info("SMS sent to {$phone}: {$message}");
+            }
             
             return $response;
         } catch (\Exception $e) {
