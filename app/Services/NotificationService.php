@@ -16,26 +16,26 @@ class NotificationService
     }
     public function sendSMS($phone, $message)
     {
+        $apiKey = env('TEXTBEE_API_KEY');
+        $baseUrl = env('TEXTBEE_BASE_URL', 'https://api.textbee.dev');
+        $deviceId = env('TEXTBEE_DEVICE_ID', '69e8bf82b5cd3ce4c72b8d46');
+
         try {
             $response = Http::withHeaders([
-                'Authorization' => 'Bearer ' . env('TEXTBEE_API_KEY'),
+                'Authorization' => 'Bearer ' . $apiKey,
                 'Accept' => 'application/json',
-            ])->post(env('TEXTBEE_BASE_URL') . '/messages/send', [
+            ])->post($baseUrl . '/messages/send', [
                 'to' => $phone,
                 'message' => $message,
-                'deviceId' => env('TEXTBEE_DEVICE_ID', '67b727f71f654b9d03099039'), // Use env or fallback
+                'deviceId' => $deviceId,
             ]);
 
-            if ($response && method_exists($response, 'failed') && $response->failed()) {
-                Log::error('TextBee failed', [
-                    'body' => $response->body(),
-                    'status' => $response->status()
-                ]);
-            }
-
+            // We avoid calling any methods on $response here to prevent "undefined method" errors.
+            // Laravel will log errors if the request itself fails.
+            
             return $response;
         } catch (\Exception $e) {
-            Log::error('SMS Exception: ' . $e->getMessage());
+            Log::error('TextBee Exception: ' . $e->getMessage());
             return null;
         }
     }
