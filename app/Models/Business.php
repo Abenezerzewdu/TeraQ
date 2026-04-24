@@ -14,6 +14,8 @@ class Business extends Model
         'location',
         'owner_id',
         'is_active',
+        'hero_image_path',
+        'logo_path',
     ];
  // A business has many queues
     public function queues(): HasMany
