@@ -21,7 +21,7 @@
             fill="none" 
         />
         
-        <!-- Kinetic 'T' Indicator -->
+        <!-- TeraQ 'T' Indicator -->
         <path 
             d="M35 50 L65 50 M50 35 L50 65" 
             stroke="white" 

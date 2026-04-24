@@ -88,7 +88,7 @@ const topNav = [
                     <p
                         class="text-teraq-muted text-[10px] uppercase tracking-widest font-medium"
                     >
-                        Kinetic Precision
+                        Smart Queue System
                     </p>
                 </div>
             </div>
