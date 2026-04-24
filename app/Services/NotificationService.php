@@ -18,10 +18,9 @@ class NotificationService
     {
         $apiKey = config('services.textbee.api_key');
         $baseUrl = config('services.textbee.base_url', 'https://api.textbee.dev');
-        $deviceId = config('services.textbee.device_id');
 
-        if (!$apiKey || !$deviceId) {
-            Log::error('TextBee Configuration missing.');
+        if (!$apiKey) {
+            Log::error('TextBee API Key missing.');
             return null;
         }
 
@@ -29,10 +28,9 @@ class NotificationService
             $response = Http::withHeaders([
                 'Authorization' => 'Bearer ' . $apiKey,
                 'Accept' => 'application/json',
-            ])->post($baseUrl . '/messages/send', [
+            ])->post($baseUrl . '/api/v1/gateway/send-sms', [
                 'to' => $phone,
                 'message' => $message,
-                'deviceId' => $deviceId,
             ]);
 
             if ($response->failed()) {
