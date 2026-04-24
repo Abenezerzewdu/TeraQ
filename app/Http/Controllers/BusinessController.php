@@ -46,7 +46,7 @@ public function show(Business $business)
 }
 
 
-      public function store(Request $request)
+    public function store(Request $request)
     {
         $validated = $request->validate([
             'name' => 'required|string|max:255',
@@ -59,5 +59,36 @@ public function show(Business $business)
         ]);
 
         return redirect()->route('business.show', $business);
+    }
+
+    public function edit(Business $business)
+    {
+        abort_unless($business->owner_id === auth()->id(), 403);
+        return Inertia::render('Business/Edit', [
+            'business' => $business
+        ]);
+    }
+
+    public function update(Request $request, Business $business)
+    {
+        abort_unless($business->owner_id === auth()->id(), 403);
+        
+        $validated = $request->validate([
+            'name' => 'required|string|max:255',
+            'location' => 'nullable|string',
+        ]);
+
+        $business->update($validated);
+
+        return redirect()->route('dashboard')->with('success', 'Business updated successfully');
+    }
+
+    public function destroy(Business $business)
+    {
+        abort_unless($business->owner_id === auth()->id(), 403);
+        
+        $business->delete();
+
+        return redirect()->route('dashboard')->with('success', 'Business deleted successfully');
     }
 }

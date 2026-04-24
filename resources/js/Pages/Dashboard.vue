@@ -17,7 +17,8 @@ import {
     Wind,
     ChevronRight,
     Circle,
-    PlusSquare
+    PlusSquare,
+    Settings
 } from 'lucide-vue-next';
 
 const props = defineProps({
@@ -71,10 +72,13 @@ const amenities = [
                             </div>
                         </template>
 
-                        <div class="mt-4">
-                             <Link :href="route('business.show', business.slug)" class="w-full inline-flex items-center justify-center gap-2 px-6 py-3 rounded-xl bg-white/5 border border-white/10 text-white font-bold hover:bg-white/10 transition-all">
+                        <div class="mt-4 flex gap-2">
+                             <Link :href="route('business.show', business.slug)" class="flex-1 inline-flex items-center justify-center gap-2 px-6 py-3 rounded-xl bg-white/5 border border-white/10 text-white font-bold hover:bg-white/10 transition-all">
                                 MANAGE CONSOLE
                                 <ChevronRight class="w-4 h-4" />
+                            </Link>
+                            <Link :href="route('businesses.edit', business.slug)" class="w-12 h-12 flex items-center justify-center rounded-xl bg-white/5 border border-white/10 text-teraq-muted hover:text-white hover:bg-white/10 transition-all" title="Business Settings">
+                                <Settings class="w-5 h-5" />
                             </Link>
                         </div>
                     </BaseCard>

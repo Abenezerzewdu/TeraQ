@@ -33,8 +33,11 @@ Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
-    Route::post('/businesses', [BusinessController::class, 'store']);
-Route::get('/businesses/create', [BusinessController::class, 'create'])->name('businesses.create');
+    Route::post('/businesses', [BusinessController::class, 'store'])->name('businesses.store');
+    Route::get('/businesses/create', [BusinessController::class, 'create'])->name('businesses.create');
+    Route::get('/businesses/{business}/edit', [BusinessController::class, 'edit'])->name('businesses.edit');
+    Route::patch('/businesses/{business}', [BusinessController::class, 'update'])->name('businesses.update');
+    Route::delete('/businesses/{business}', [BusinessController::class, 'destroy'])->name('businesses.destroy');
 });
 Route::post('/queues/{queue}/join',[QueueController::class,'join']);
 
