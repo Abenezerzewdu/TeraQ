@@ -16,29 +16,31 @@ class NotificationService
     }
     public function sendSMS($phone, $message)
     {
-        $apiKey = config('services.textbee.api_key');
+        $apiKey  = config('services.textbee.api_key');
         $baseUrl = config('services.textbee.base_url', 'https://api.textbee.dev');
+        $deviceId = config('services.textbee.device_id');
 
-        if (!$apiKey) {
-            Log::error('TextBee API Key missing.');
+        if (!$apiKey || !$deviceId) {
+            Log::error('TextBee: API key or device ID is missing in configuration.');
             return null;
         }
 
         try {
             $response = Http::withHeaders([
-                'Authorization' => 'Bearer ' . $apiKey,
-                'Accept' => 'application/json',
-            ])->post($baseUrl . '/api/v1/gateway/send-sms', [
-                'to' => $phone,
-                'message' => $message,
+                'x-api-key'    => $apiKey,
+                'Content-Type' => 'application/json',
+                'Accept'       => 'application/json',
+            ])->post("{$baseUrl}/api/v1/gateway/devices/{$deviceId}/send-sms", [
+                'recipients' => [$phone],
+                'message'    => $message,
             ]);
 
             if ($response->failed()) {
-                Log::error('TextBee API Error: ' . $response->body());
+                Log::error('TextBee API Error [' . $response->status() . ']: ' . $response->body());
             } else {
-                Log::info("SMS sent to {$phone}: {$message}");
+                Log::info("TextBee SMS sent to {$phone}");
             }
-            
+
             return $response;
         } catch (\Exception $e) {
             Log::error('TextBee Exception: ' . $e->getMessage());
