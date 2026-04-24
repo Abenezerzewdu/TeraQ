@@ -18,7 +18,15 @@ Route::get('/', function () {
 })->name('home');
 
 Route::get('/dashboard', function () {
-    return Inertia::render('Dashboard');
+    return Inertia::render('Dashboard', [
+        'active_entries' => auth()->user()->queueEntries()
+            ->with('queue.business')
+            ->whereIn('status', ['waiting', 'serving'])
+            ->get(),
+        'owned_businesses' => auth()->user()->businesses()
+            ->withCount(['queues'])
+            ->get(),
+    ]);
 })->middleware(['auth', 'verified'])->name('dashboard');
 
 Route::middleware('auth')->group(function () {

@@ -10,6 +10,7 @@ class QueueEntry extends Model
     //user entry to queue
      protected $fillable = [
         'queue_id',
+        'user_id',
         'user_name',
         'device_id',
         'phone',
@@ -28,6 +29,11 @@ class QueueEntry extends Model
     public function queue(): BelongsTo
     {
         return $this->belongsTo(Queue::class);
+    }
+
+    public function user(): BelongsTo
+    {
+        return $this->belongsTo(User::class);
     }
 
     // Helper: check if active

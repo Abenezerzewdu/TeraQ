@@ -33,6 +33,8 @@ class HandleInertiaRequests extends Middleware
             ...parent::share($request),
             'auth' => [
                 'user' => $request->user(),
+                'has_business' => $request->user() ? $request->user()->businesses()->exists() : false,
+                'owned_businesses' => $request->user() ? $request->user()->businesses()->get(['id', 'name', 'slug']) : [],
             ],
             'flash' => [
                 'success' => $request->session()->get('success'),

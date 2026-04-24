@@ -1,5 +1,5 @@
 <script setup>
-import { ref } from "vue";
+import { ref, computed } from "vue";
 import ApplicationLogo from "@/Components/ApplicationLogo.vue";
 import { Link, usePage } from "@inertiajs/vue3";
 import {
@@ -26,28 +26,40 @@ const toggleSidebar = () => {
     isSidebarOpen.value = !isSidebarOpen.value;
 };
 
-const navigation = [
-    {
-        name: "Dashboard",
-        href: route("dashboard"),
-        icon: LayoutDashboard,
-        current: route().current("dashboard"),
-    },
-    {
-        name: "Create Business",
-        href: route("businesses.create"),
-        icon: PlusSquare,
-        current: route().current("business.create"),
-    },
-    { name: "Active Queues", href: "#", icon: Zap, current: false },
-    { name: "Analytics", href: "#", icon: BarChart3, current: false },
-    { name: "Settings", href: "#", icon: Settings, current: false },
-];
+const { props: pageProps } = usePage();
+
+const navigation = computed(() => {
+    const items = [
+        {
+            name: "Home Dashboard",
+            href: route("dashboard"),
+            icon: LayoutDashboard,
+            current: route().current("dashboard"),
+        },
+    ];
+
+    if (pageProps.auth.has_business) {
+        items.push({
+            name: "My Businesses",
+            href: route("businesses.index"), // Assuming you have this route
+            icon: BarChart3,
+            current: route().current("businesses.*"),
+        });
+    } else {
+        items.push({
+            name: "Register Business",
+            href: route("businesses.create"),
+            icon: PlusSquare,
+            current: route().current("businesses.create"),
+        });
+    }
+
+    return items;
+});
 
 const topNav = [
-    { name: "Home", href: route("home"), icon: Home },
-    { name: "Explore", href: route("businesses"), icon: Compass },
-    { name: "Support", href: route("support"), icon: MessageSquare },
+    { name: "Explore Queues", href: route("home"), icon: Home },
+    { name: "My Activity", href: route("dashboard"), icon: Compass }, // Use dashboard for activity
 ];
 </script>
 

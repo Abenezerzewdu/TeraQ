@@ -19,6 +19,11 @@ import {
     Circle
 } from 'lucide-vue-next';
 
+const props = defineProps({
+    active_entries: Array,
+    owned_businesses: Array,
+});
+
 const activities = [
     { id: 1, name: 'Marcus Chen', action: 'Joined the queue', time: 'JUST NOW', avatar: 'https://i.pravatar.cc/150?u=marcus' },
     { id: 2, name: 'Sarah Jenkins', action: 'Now being served', time: '2M AGO', avatar: 'https://i.pravatar.cc/150?u=sarah' },
