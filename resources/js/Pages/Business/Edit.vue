@@ -68,7 +68,7 @@ const deleteBusiness = () => {
                                     <div class="relative">
                                         <input 
                                             v-model="form.name" 
-                                            placeholder="e.g. Kinetic Coffee Roasters" 
+                                            placeholder="e.g. Eco Bean Cafe" 
                                             class="w-full bg-teraq-bg border-teraq-border border-2 rounded-xl px-4 py-4 text-white focus:ring-teraq-primary/30 focus:border-teraq-primary focus:bg-teraq-surface transition-all placeholder:text-teraq-muted/30"
                                             required
                                         />

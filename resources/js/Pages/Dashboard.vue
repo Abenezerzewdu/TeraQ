@@ -10,36 +10,20 @@ import {
     TrendingUp, 
     MapPin, 
     Navigation,
-    Wifi,
-    Coffee,
-    Monitor,
     Zap,
-    Wind,
     ChevronRight,
     Circle,
     PlusSquare,
     Settings
 } from 'lucide-vue-next';
+import { ref } from 'vue';
 
 const props = defineProps({
     active_entries: Array,
     owned_businesses: Array,
 });
 
-const activities = [
-    { id: 1, name: 'Marcus Chen', action: 'Joined the queue', time: 'JUST NOW', avatar: 'https://i.pravatar.cc/150?u=marcus' },
-    { id: 2, name: 'Sarah Jenkins', action: 'Now being served', time: '2M AGO', avatar: 'https://i.pravatar.cc/150?u=sarah' },
-    { id: 3, name: 'David Miller', action: 'Joined the queue', time: '5M AGO', avatar: 'https://i.pravatar.cc/150?u=david' },
-    { id: 4, name: 'Elena Rodriguez', action: 'Left the queue', time: '12M AGO', avatar: 'https://i.pravatar.cc/150?u=elena' },
-];
-
-const amenities = [
-    { name: 'High-Speed WiFi', icon: Wifi },
-    { name: 'Premium Coffee', icon: Coffee },
-    { name: 'Workstations', icon: Monitor },
-    { name: 'EV Charging', icon: Zap },
-    { name: 'Climate Control', icon: Wind },
-];
+const activeTab = ref(props.owned_businesses.length > 0 ? 'businesses' : 'queues');
 </script>
 
 <template>
@@ -48,21 +32,44 @@ const amenities = [
     <AuthenticatedLayout>
         <div class="space-y-8">
             <!-- Header section -->
-            <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+            <div class="flex flex-col md:flex-row md:items-center justify-between gap-6">
                 <div>
-                    <h1 class="text-3xl font-bold text-white tracking-tight">Kinetic Dashboard</h1>
-                    <p class="text-teraq-muted mt-1">Manage your businesses and track your active queues.</p>
+                    <h1 class="text-3xl font-bold text-white tracking-tight">TeraQ Dashboard</h1>
+                    <p class="text-teraq-muted mt-1">Manage your professional presence and track your active queues.</p>
                 </div>
-                <div class="flex items-center gap-3">
-                    <QueueButton v-if="!owned_businesses.length" :href="route('businesses.create')">
-                        REGISTER BUSINESS
-                    </QueueButton>
+                
+                <!-- Tab Navigation -->
+                <div class="flex p-1 bg-white/5 rounded-2xl border border-white/10 backdrop-blur-xl">
+                    <button 
+                        @click="activeTab = 'businesses'"
+                        class="px-6 py-2.5 rounded-xl font-bold text-xs uppercase tracking-widest transition-all duration-300 flex items-center gap-2"
+                        :class="activeTab === 'businesses' ? 'bg-teraq-primary text-white shadow-lg shadow-teraq-primary/20' : 'text-teraq-muted hover:text-white'"
+                    >
+                        <PlusSquare class="w-4 h-4" />
+                        My Businesses
+                    </button>
+                    <button 
+                        @click="activeTab = 'queues'"
+                        class="px-6 py-2.5 rounded-xl font-bold text-xs uppercase tracking-widest transition-all duration-300 flex items-center gap-2"
+                        :class="activeTab === 'queues' ? 'bg-teraq-primary text-white shadow-lg shadow-teraq-primary/20' : 'text-teraq-muted hover:text-white'"
+                    >
+                        <Clock class="w-4 h-4" />
+                        My Queues
+                        <span v-if="active_entries.length" class="ml-1 w-5 h-5 rounded-full bg-white/20 flex items-center justify-center text-[10px]">
+                            {{ active_entries.length }}
+                        </span>
+                    </button>
                 </div>
             </div>
 
-            <!-- Business Owner Section (if they have businesses) -->
-            <div v-if="owned_businesses.length" class="space-y-4">
-                <h3 class="text-teraq-muted text-xs uppercase tracking-[0.2em] font-bold">Your Businesses</h3>
+            <!-- Business Owner Section -->
+            <div v-if="activeTab === 'businesses'" class="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
+                <div class="flex items-center justify-between">
+                    <h3 class="text-teraq-muted text-xs uppercase tracking-[0.2em] font-bold">Managed Entities</h3>
+                    <QueueButton :href="route('businesses.create')" class="scale-90 origin-right">
+                        REGISTER NEW
+                    </QueueButton>
+                </div>
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                     <BaseCard v-for="business in owned_businesses" :key="business.id" :title="business.name" :subtitle="`${business.queues_count} Active Queues`" gradient>
                         <template #action>
@@ -94,8 +101,8 @@ const amenities = [
             </div>
 
             <!-- Customer Persona: Active Queues -->
-            <div class="space-y-4">
-                <h3 class="text-teraq-muted text-xs uppercase tracking-[0.2em] font-bold">Your Active Queues</h3>
+            <div v-if="activeTab === 'queues'" class="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
+                <h3 class="text-teraq-muted text-xs uppercase tracking-[0.2em] font-bold">Current Assignments</h3>
                 <div v-if="active_entries.length" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                      <BaseCard v-for="entry in active_entries" :key="entry.id" :title="entry.queue.business.name" :subtitle="entry.queue.name" :gradient="entry.status === 'serving'">
                         <template #action>
@@ -136,19 +143,6 @@ const amenities = [
                     <Link :href="route('home')" class="mt-2 px-8 py-3 rounded-xl bg-white/5 border border-white/10 text-white font-bold hover:bg-white/10 transition-all">
                         EXPLORE SERVICES
                     </Link>
-                </div>
-            </div>
-
-            <!-- Third Row: Amenities -->
-            <div class="space-y-4">
-                <h3 class="text-teraq-muted text-xs uppercase tracking-[0.2em] font-bold">On-Site Amenities</h3>
-                <div class="flex flex-wrap gap-4">
-                    <div v-for="amenity in amenities" :key="amenity.name" class="glass-card flex items-center gap-4 px-6 py-4 hover:border-teraq-primary/30 transition-all duration-300 group cursor-default">
-                        <div class="w-10 h-10 rounded-xl bg-white/5 flex items-center justify-center transition-colors group-hover:bg-teraq-primary/20">
-                            <component :is="amenity.icon" class="w-5 h-5 text-teraq-muted transition-colors group-hover:text-teraq-primary" />
-                        </div>
-                        <span class="text-white font-semibold">{{ amenity.name }}</span>
-                    </div>
                 </div>
             </div>
         </div>

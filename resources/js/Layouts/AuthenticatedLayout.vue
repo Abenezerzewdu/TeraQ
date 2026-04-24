@@ -41,7 +41,7 @@ const navigation = computed(() => {
     if (pageProps.auth.has_business) {
         items.push({
             name: "My Businesses",
-            href: route("businesses.index"), // Assuming you have this route
+            href: route("businesses"), // Assuming you have this route
             icon: BarChart3,
             current: route().current("businesses.*"),
         });
@@ -72,7 +72,9 @@ const topNav = [
         >
             <div class="p-6 flex items-center gap-3">
                 <Link :href="route('home')" class="shrink-0 group">
-                    <div class="w-10 h-10 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center shadow-lg transition-transform group-hover:scale-110">
+                    <div
+                        class="w-10 h-10 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center shadow-lg transition-transform group-hover:scale-110"
+                    >
                         <ApplicationLogo class="w-7 h-7" />
                     </div>
                 </Link>
@@ -132,7 +134,9 @@ const topNav = [
         >
             <div class="flex items-center gap-2">
                 <Link :href="route('home')" class="group">
-                    <div class="w-8 h-8 rounded-lg bg-white/5 border border-white/10 flex items-center justify-center transition-transform group-hover:scale-110">
+                    <div
+                        class="w-8 h-8 rounded-lg bg-white/5 border border-white/10 flex items-center justify-center transition-transform group-hover:scale-110"
+                    >
                         <ApplicationLogo class="w-5 h-5" />
                     </div>
                 </Link>
@@ -161,7 +165,9 @@ const topNav = [
                 >
                     <div class="flex items-center gap-2">
                         <Link :href="route('home')" class="group">
-                            <div class="w-10 h-10 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center transition-transform group-hover:scale-110">
+                            <div
+                                class="w-10 h-10 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center transition-transform group-hover:scale-110"
+                            >
                                 <ApplicationLogo class="w-7 h-7" />
                             </div>
                         </Link>

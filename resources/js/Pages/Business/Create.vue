@@ -42,7 +42,7 @@ const submit = () => {
             <header class="mb-12">
                 <h1 class="text-white text-5xl font-bold tracking-tight">Establish Your <span class="bg-gradient-to-r from-teraq-accent to-teraq-primary bg-clip-text text-transparent">Presence</span></h1>
                 <p class="text-teraq-muted mt-4 text-lg max-w-xl">
-                    Define your operational identity within the TeraQ ecosystem. Precision starts with your profile.
+                    Define your operational identity within the TeraQ ecosystem. Get started by setting up your profile.
                 </p>
             </header>
 
@@ -74,7 +74,7 @@ const submit = () => {
                                     <div class="relative">
                                         <input 
                                             v-model="form.name" 
-                                            placeholder="e.g. Kinetic Coffee Roasters" 
+                                            placeholder="e.g. Eco Bean Cafe" 
                                             class="w-full bg-teraq-bg border-teraq-border border-2 rounded-xl px-4 py-4 text-white focus:ring-teraq-primary/30 focus:border-teraq-primary focus:bg-teraq-surface transition-all placeholder:text-teraq-muted/30"
                                         />
                                         <Store class="absolute right-4 top-1/2 -translate-y-1/2 w-5 h-5 text-teraq-muted/50" />
