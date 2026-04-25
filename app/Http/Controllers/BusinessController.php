@@ -4,8 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Models\Business;
 use Illuminate\Http\Request;
-use Inertia\Inertia;
 use Illuminate\Support\Facades\Storage;
+use Inertia\Inertia;
+use Laravel\Reverb\Loggers\Log;
 
 class BusinessController extends Controller
 {
@@ -49,17 +50,17 @@ public function show(Business $business)
 
     public function store(Request $request)
     {
-        \Log::info('Business store request', $request->all());
+        Log::info('Business store request', $request->all());
         
         try {
             $validated = $request->validate([
                 'name' => 'required|string|max:255',
                 'location' => 'nullable|string',
-                'hero_image' => 'nullable|image|max:10240',
-                'logo' => 'nullable|image|max:10240',
+                'hero_image' => 'nullable|file|mimes:jpeg,png,jpg,gif,svg,webp,heic,heif,avif,bmp|max:10240',
+                'logo' => 'nullable|file|mimes:jpeg,png,jpg,gif,svg,webp,heic,heif,avif,bmp|max:10240',
             ]);
         } catch (\Illuminate\Validation\ValidationException $e) {
-            \Log::error('Business validation failed', $e->errors());
+            Log::error('Business validation failed', $e->errors());
             throw $e;
         }
 
@@ -97,8 +98,8 @@ public function show(Business $business)
         $validated = $request->validate([
             'name' => 'required|string|max:255',
             'location' => 'nullable|string',
-            'hero_image' => 'nullable|image|max:10240',
-            'logo' => 'nullable|image|max:10240',
+            'hero_image' => 'nullable|file|mimes:jpeg,png,jpg,gif,svg,webp,heic,heif,avif,bmp|max:10240',
+            'logo' => 'nullable|file|mimes:jpeg,png,jpg,gif,svg,webp,heic,heif,avif,bmp|max:10240',
         ]);
 
         $data = [
