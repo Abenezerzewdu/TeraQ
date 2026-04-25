@@ -69,5 +69,18 @@ Route::get('/test-sms', function () {
     );
 
     return 'SMS sent (check your phone)';
+
+// TEMPORARY: diagnostic route to check web server PHP config
+Route::get('/debug-upload', function () {
+    return response()->json([
+        'upload_tmp_dir' => ini_get('upload_tmp_dir'),
+        'sys_temp_dir' => sys_get_temp_dir(),
+        'upload_max_filesize' => ini_get('upload_max_filesize'),
+        'post_max_size' => ini_get('post_max_size'),
+        'file_uploads' => ini_get('file_uploads'),
+        'tmp_writable' => is_writable(sys_get_temp_dir()),
+        'loaded_ini' => php_ini_loaded_file(),
+        'sapi' => php_sapi_name(),
+    ]);
 });
 require __DIR__.'/auth.php';
