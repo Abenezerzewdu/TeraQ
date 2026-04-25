@@ -52,8 +52,8 @@ public function show(Business $business)
         $validated = $request->validate([
             'name' => 'required|string|max:255',
             'location' => 'nullable|string',
-            'hero_image' => 'nullable|image|max:2048',
-            'logo' => 'nullable|image|max:2048',
+            'hero_image' => 'nullable|image|max:10240',
+            'logo' => 'nullable|image|max:10240',
         ]);
 
         $data = [
@@ -90,8 +90,8 @@ public function show(Business $business)
         $validated = $request->validate([
             'name' => 'required|string|max:255',
             'location' => 'nullable|string',
-            'hero_image' => 'nullable|image|max:2048',
-            'logo' => 'nullable|image|max:2048',
+            'hero_image' => 'nullable|image|max:10240',
+            'logo' => 'nullable|image|max:10240',
         ]);
 
         $data = [

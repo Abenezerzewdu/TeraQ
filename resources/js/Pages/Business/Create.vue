@@ -52,7 +52,10 @@ const steps = [
 ];
 
 const submit = () => {
-    form.post("/businesses");
+    form.post("/businesses", {
+        forceFormData: true,
+        preserveScroll: true,
+    });
 };
 </script>
 
@@ -153,16 +156,20 @@ const submit = () => {
                                 <div class="pt-4">
                                     <label class="block text-teraq-muted text-[10px] font-bold uppercase tracking-[0.2em] mb-4">Brand Visuals</label>
                                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                                        <label class="h-40 bg-teraq-bg border-teraq-border border-2 rounded-2xl border-dashed flex flex-col items-center justify-center gap-2 group cursor-pointer hover:border-teraq-primary/30 transition-all relative overflow-hidden">
-                                            <input type="file" @change="handleHeroImageChange" class="hidden" accept="image/*" />
-                                            <div v-if="heroImagePreview" class="absolute inset-0 z-0">
-                                                <img :src="heroImagePreview" class="w-full h-full object-cover opacity-40" />
-                                            </div>
-                                            <div class="relative z-10 p-3 bg-white/5 rounded-xl group-hover:bg-teraq-primary/10 transition-colors">
-                                                <Upload class="w-6 h-6 text-teraq-muted group-hover:text-teraq-primary" />
-                                            </div>
-                                            <span class="relative z-10 text-teraq-muted text-[10px] font-bold uppercase tracking-widest">{{ heroImagePreview ? 'Change Hero Image' : 'Upload Hero Image' }}</span>
-                                        </label>
+                                        <div>
+                                            <label class="h-40 bg-teraq-bg border-teraq-border border-2 rounded-2xl border-dashed flex flex-col items-center justify-center gap-2 group cursor-pointer hover:border-teraq-primary/30 transition-all relative overflow-hidden">
+                                                <input type="file" @change="handleHeroImageChange" class="hidden" accept="image/*" />
+                                                <div v-if="heroImagePreview" class="absolute inset-0 z-0">
+                                                    <img :src="heroImagePreview" class="w-full h-full object-cover opacity-40" />
+                                                </div>
+                                                <div class="relative z-10 p-3 bg-white/5 rounded-xl group-hover:bg-teraq-primary/10 transition-colors">
+                                                    <Upload class="w-6 h-6 text-teraq-muted group-hover:text-teraq-primary" />
+                                                </div>
+                                                <span class="relative z-10 text-teraq-muted text-[10px] font-bold uppercase tracking-widest">{{ heroImagePreview ? 'Change Hero Image' : 'Upload Hero Image' }}</span>
+                                            </label>
+                                            <div v-if="form.errors.hero_image" class="text-red-400 text-xs mt-2 text-center">{{ form.errors.hero_image }}</div>
+                                        </div>
+                                    <div>
                                         <label class="h-40 bg-teraq-bg border-teraq-border border-2 rounded-2xl border-dashed flex flex-col items-center justify-center gap-2 group cursor-pointer hover:border-teraq-primary/30 transition-all relative overflow-hidden">
                                             <input type="file" @change="handleLogoChange" class="hidden" accept="image/*" />
                                             <div v-if="logoPreview" class="absolute inset-0 z-0 flex items-center justify-center p-4">
@@ -173,6 +180,8 @@ const submit = () => {
                                             </div>
                                             <span class="relative z-10 text-teraq-muted text-[10px] font-bold uppercase tracking-widest">{{ logoPreview ? 'Change Logo' : 'Upload Logo' }}</span>
                                         </label>
+                                        <div v-if="form.errors.logo" class="text-red-400 text-xs mt-2 text-center">{{ form.errors.logo }}</div>
+                                    </div>
                                     </div>
                                 </div>
                             </div>
