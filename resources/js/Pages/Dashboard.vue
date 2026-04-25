@@ -72,6 +72,9 @@ const activeTab = ref(props.owned_businesses.length > 0 ? 'businesses' : 'queues
                 </div>
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                     <BaseCard v-for="business in owned_businesses" :key="business.id" :title="business.name" :subtitle="`${business.queues_count} Active Queues`" gradient>
+                        <template #icon>
+                            <img v-if="business.logo_path" :src="`/storage/${business.logo_path}`" class="w-6 h-6 object-contain rounded-md bg-white/10" />
+                        </template>
                         <template #action>
                             <div class="flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-[10px] font-bold uppercase tracking-wider">
                                 <Circle class="w-2 h-2 fill-current" />

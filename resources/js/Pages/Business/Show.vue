@@ -66,7 +66,7 @@ const submitQueue = () => {
             <div class="relative rounded-[2.5rem] overflow-hidden group">
                 <!-- Background Image & Gradient -->
                 <div class="absolute inset-0 z-0">
-                    <img src="https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&fit=crop&q=80&w=2000" class="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105" />
+                    <img :src="business.hero_image_path ? `/storage/${business.hero_image_path}` : 'https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&fit=crop&q=80&w=2000'" class="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105" />
                     <div class="absolute inset-0 bg-gradient-to-t from-teraq-bg via-teraq-bg/40 to-transparent"></div>
                     <div class="absolute inset-0 bg-gradient-to-r from-teraq-bg/80 via-transparent to-transparent"></div>
                 </div>
@@ -77,11 +77,16 @@ const submitQueue = () => {
                             <Building2 class="w-4 h-4" />
                             Official Business Profile
                         </div>
-                        <div>
-                            <h1 class="text-5xl md:text-7xl font-black tracking-tighter text-white mb-4">{{ business.name }}</h1>
-                            <div class="flex items-center gap-3 text-teraq-muted">
-                                <MapPin class="w-5 h-5 text-teraq-primary" />
-                                <span class="text-lg font-medium">{{ business.location || 'Location not specified' }}</span>
+                        <div class="flex items-center gap-6">
+                            <div v-if="business.logo_path" class="w-24 h-24 rounded-2xl bg-white/10 p-2 backdrop-blur-md border border-white/20 shrink-0">
+                                <img :src="`/storage/${business.logo_path}`" class="w-full h-full object-contain rounded-xl" />
+                            </div>
+                            <div>
+                                <h1 class="text-5xl md:text-7xl font-black tracking-tighter text-white mb-4">{{ business.name }}</h1>
+                                <div class="flex items-center gap-3 text-teraq-muted">
+                                    <MapPin class="w-5 h-5 text-teraq-primary" />
+                                    <span class="text-lg font-medium">{{ business.location || 'Location not specified' }}</span>
+                                </div>
                             </div>
                         </div>
                     </div>
