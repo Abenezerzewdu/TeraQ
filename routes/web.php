@@ -69,7 +69,7 @@ Route::get('/test-sms', function () {
     );
 
     return 'SMS sent (check your phone)';
-
+});
 // TEMPORARY: diagnostic route to check web server PHP config
 Route::get('/debug-upload', function () {
     return response()->json([
@@ -83,4 +83,5 @@ Route::get('/debug-upload', function () {
         'sapi' => php_sapi_name(),
     ]);
 });
+
 require __DIR__.'/auth.php';
