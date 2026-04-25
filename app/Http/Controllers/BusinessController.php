@@ -50,6 +50,16 @@ public function show(Business $business)
 
     public function store(Request $request)
     {
+        logger()->info('Raw files array', $_FILES);
+
+        if ($request->hasFile('hero_image') && !$request->file('hero_image')->isValid()) {
+            return back()->withErrors(['hero_image' => 'PHP Upload Error: ' . $request->file('hero_image')->getErrorMessage() . ' (Code ' . $request->file('hero_image')->getError() . ')']);
+        }
+        
+        if ($request->hasFile('logo') && !$request->file('logo')->isValid()) {
+            return back()->withErrors(['logo' => 'PHP Upload Error: ' . $request->file('logo')->getErrorMessage() . ' (Code ' . $request->file('logo')->getError() . ')']);
+        }
+
         $validated = $request->validate([
             'name' => 'required|string|max:255',
             'location' => 'nullable|string',
