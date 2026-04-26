@@ -53,7 +53,10 @@ const handleLogoChange = (e) => {
 };
 
 const submit = () => {
-    form.post(route('businesses.update', props.business.slug));
+    form.post(route('businesses.update', props.business.slug), {
+        forceFormData: true,
+        preserveScroll: true,
+    });
 };
 
 const deleteBusiness = () => {

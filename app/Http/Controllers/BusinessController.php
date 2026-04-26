@@ -73,8 +73,8 @@ public function show(Business $business)
         $validated = $request->validate([
             'name' => 'required|string|max:255',
             'location' => 'nullable|string',
-            'hero_image' => 'nullable|file|mimes:jpeg,png,jpg,gif,svg,webp,heic,heif,avif,bmp|max:10240',
-            'logo' => 'nullable|file|mimes:jpeg,png,jpg,gif,svg,webp,heic,heif,avif,bmp|max:10240',
+            'hero_image' => 'nullable|file|mimes:jpeg,png,jpg,gif,svg,webp,heic,heif,avif,bmp|max:30240',
+            'logo' => 'nullable|file|mimes:jpeg,png,jpg,gif,svg,webp,heic,heif,avif,bmp|max:30240',
         ]);
 
         $data = [

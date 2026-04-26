@@ -12,13 +12,13 @@ import {
     ChevronDown,
     Map as MapIcon,
     Plus,
-    Upload
+    Upload,
+    Circle,
+    Zap
 } from 'lucide-vue-next';
 
 const form = useForm({
     name: "",
-    category: "Retail & Boutiques",
-    operating_hours: "09:00 - 18:00",
     location: "",
     hero_image: null,
     logo: null,
@@ -52,7 +52,7 @@ const steps = [
 ];
 
 const submit = () => {
-    form.post("/businesses", {
+    form.post(route('businesses.store'), {
         forceFormData: true,
         preserveScroll: true,
     });
