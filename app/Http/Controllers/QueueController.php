@@ -11,13 +11,12 @@ use Inertia\Inertia;
 
 class QueueController extends Controller
 {
-
     public function show(Queue $queue)
     {
         $queue->load(['entries', 'business']);
 
         return Inertia::render('Queue/Show', [
-            'queue' => $queue,
+            'queue'   => $queue,
             'isOwner' => auth()->id() === $queue->business->owner_id,
             'entries' => $queue->entries()
                 ->whereIn('status', ['waiting', 'serving'])
@@ -25,25 +24,24 @@ class QueueController extends Controller
                 ->get(),
         ]);
     }
-    
-// create a queue for business
-public function store(Business $business, Request $request)
-{
-    $validated = $request->validate([
-        'name' => 'required|string',
-        'avg_service_time' => 'required|integer|min:1',
-    ]);
 
-    $business->queues()->create($validated);
+    public function store(Business $business, Request $request)
+    {
+        $validated = $request->validate([
+            'name'             => 'required|string',
+            'avg_service_time' => 'required|integer|min:1',
+        ]);
 
-    return back()->with('success', 'Queue created');
-}
+        $business->queues()->create($validated);
+
+        return back()->with('success', 'Queue created.');
+    }
 
     public function join(Queue $queue, Request $request, QueueService $service)
     {
         $request->validate([
-            'name' => 'nullable|string|max:255',
-            'phone'=>'nullable|string|max:20',
+            'name'      => 'nullable|string|max:255',
+            'phone'     => 'nullable|string|max:20',
             'device_id' => 'required|string',
         ]);
 
@@ -59,55 +57,48 @@ public function store(Business $business, Request $request)
     public function leave(Request $request, Queue $queue, QueueService $service)
     {
         $service->leaveQueue($queue, $request);
+
         return back()->with('info', 'You have left the queue.');
     }
 
     public function startNext(Queue $queue, QueueService $service)
     {
         $entry = $service->startServingNext($queue);
-        
-        if ($entry) {
-            return back()->with('success', "Now serving {$entry->user_name}");
-        }
 
-        return back()->with('info', 'No more users in line.');
+        return $entry
+            ? back()->with('success', "Now serving {$entry->user_name}.")
+            : back()->with('info', 'No more users in line.');
     }
 
     public function updatePhone(Request $request, Queue $queue, QueueService $service)
     {
         $request->validate([
-            'phone' => 'required|string|max:20',
+            'phone'     => 'required|string|max:20',
             'device_id' => 'required|string',
         ]);
 
         $entry = $service->updatePhone($queue, $request);
 
-        if ($entry) {
-            // Send welcome SMS now that we have the phone number
-            app(\App\Services\NotificationService::class)->sendWelcomeSMS($entry);
-            
-            return back()->with('success', 'Phone number updated! We will notify you when it is your turn.');
+        if (! $entry) {
+            return back()->with('error', 'Could not find your queue entry.');
         }
 
-        return back()->with('error', 'Could not find your queue entry.');
+        app(\App\Services\NotificationService::class)->sendWelcomeSMS($entry);
+
+        return back()->with('success', 'Phone number updated! We will notify you when it is your turn.');
     }
 
     public function removeEntry(Queue $queue, QueueEntry $entry, QueueService $service)
     {
-        // Ensure the entry belongs to the queue
         if ($entry->queue_id !== $queue->id) {
             return back()->with('error', 'Invalid entry.');
         }
 
-        // Ensure the user is the owner
-        if (auth()->id() !== $queue->business->owner_id) {
-            abort(403);
-        }
+        abort_unless(auth()->id() === $queue->business->owner_id, 403);
 
         $service->removeEntry($queue, $entry);
 
         return back()->with('success', 'User removed from queue.');
     }
-
 }
 

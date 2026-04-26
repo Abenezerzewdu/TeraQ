@@ -49,36 +49,15 @@ public function show(Business $business)
 
     public function store(Request $request)
     {
-        // Check for raw PHP file upload errors BEFORE Laravel touches them
-        $uploadErrors = [];
-        foreach (['hero_image', 'logo'] as $field) {
-            if (isset($_FILES[$field]) && $_FILES[$field]['error'] !== UPLOAD_ERR_OK && $_FILES[$field]['error'] !== UPLOAD_ERR_NO_FILE) {
-                $errorMessages = [
-                    UPLOAD_ERR_INI_SIZE   => 'File exceeds PHP upload_max_filesize (' . ini_get('upload_max_filesize') . ')',
-                    UPLOAD_ERR_FORM_SIZE  => 'File exceeds form MAX_FILE_SIZE',
-                    UPLOAD_ERR_PARTIAL    => 'File was only partially uploaded',
-                    UPLOAD_ERR_NO_TMP_DIR => 'Missing temp folder. upload_tmp_dir=' . ini_get('upload_tmp_dir') . ' sys_temp_dir=' . sys_get_temp_dir(),
-                    UPLOAD_ERR_CANT_WRITE => 'Failed to write file to disk',
-                    UPLOAD_ERR_EXTENSION  => 'A PHP extension stopped the upload',
-                ];
-                $code = $_FILES[$field]['error'];
-                $uploadErrors[$field] = 'Upload failed (code ' . $code . '): ' . ($errorMessages[$code] ?? 'Unknown error');
-            }
-        }
-
-        if (!empty($uploadErrors)) {
-            return back()->withErrors($uploadErrors);
-        }
-
         $validated = $request->validate([
-            'name' => 'required|string|max:255',
-            'location' => 'nullable|string',
+            'name'       => 'required|string|max:255',
+            'location'   => 'nullable|string',
             'hero_image' => 'nullable|file|mimes:jpeg,png,jpg,gif,svg,webp,heic,heif,avif,bmp|max:30240',
-            'logo' => 'nullable|file|mimes:jpeg,png,jpg,gif,svg,webp,heic,heif,avif,bmp|max:30240',
+            'logo'       => 'nullable|file|mimes:jpeg,png,jpg,gif,svg,webp,heic,heif,avif,bmp|max:30240',
         ]);
 
         $data = [
-            'name' => $validated['name'],
+            'name'     => $validated['name'],
             'location' => $validated['location'] ?? null,
             'owner_id' => auth()->id(),
         ];
