@@ -8,8 +8,7 @@ use Illuminate\Support\Str;
 
 class Business extends Model
 {
-    //
-     protected $fillable = [
+    protected $fillable = [
         'name',
         'location',
         'owner_id',
@@ -17,22 +16,23 @@ class Business extends Model
         'hero_image_path',
         'logo_path',
     ];
- // A business has many queues
+
     public function queues(): HasMany
     {
         return $this->hasMany(Queue::class);
     }
 
-    protected static function boot()
-{
-    parent::boot();
+    public function getRouteKeyName(): string
+    {
+        return 'slug';
+    }
 
-    static::creating(function ($business) {
-        $business->slug = Str::slug($business->name);
-    });
-}
-public function getRouteKeyName()
-{
-    return 'slug';
-}
+    protected static function boot(): void
+    {
+        parent::boot();
+
+        static::creating(function (Business $business) {
+            $business->slug = Str::slug($business->name);
+        });
+    }
 }

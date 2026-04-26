@@ -5,10 +5,11 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Support\Str;
+
 class Queue extends Model
 {
-    //
     protected $fillable = [
         'business_id',
         'name',
@@ -16,19 +17,16 @@ class Queue extends Model
         'avg_service_time',
     ];
 
-     //  Queue belongs to a business
     public function business(): BelongsTo
     {
         return $this->belongsTo(Business::class);
     }
 
-    // Queue has many entries
     public function entries(): HasMany
     {
         return $this->hasMany(QueueEntry::class);
     }
 
-    // Helper: only waiting users
     public function waitingEntries(): HasMany
     {
         return $this->hasMany(QueueEntry::class)
@@ -36,25 +34,22 @@ class Queue extends Model
             ->orderBy('position');
     }
 
-    //  Helper: current serving user
-    public function currentServing()
+    public function currentServing(): HasOne
     {
-        return $this->hasOne(QueueEntry::class)
-            ->where('status', 'serving');
+        return $this->hasOne(QueueEntry::class)->where('status', 'serving');
     }
 
-    protected static function boot()
-{
-    parent::boot();
+    public function getRouteKeyName(): string
+    {
+        return 'slug';
+    }
 
-    static::creating(function ($queue) {
-        $queue->slug = Str::slug($queue->name . '-' . $queue->business_id);
-    });
-}
+    protected static function boot(): void
+    {
+        parent::boot();
 
-public function getRouteKeyName()
-{
-    return 'slug';
-}
-
+        static::creating(function (Queue $queue) {
+            $queue->slug = Str::slug($queue->name . '-' . $queue->business_id);
+        });
+    }
 }

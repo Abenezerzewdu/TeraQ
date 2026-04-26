@@ -9,51 +9,45 @@ use Inertia\Inertia;
 
 class BusinessController extends Controller
 {
+    private const IMAGE_VALIDATION = 'nullable|file|mimes:jpeg,png,jpg,gif,svg,webp,heic,heif,avif,bmp|max:30240';
 
     public function index(Request $request)
     {
-        $search = $request->input('search');
-
-        $businesses = Business::with(['queues' => function($query) {
-                $query->withCount(['entries' => function($q) {
-                    $q->where('status', 'waiting');
-                }]);
-            }])
-            ->when($search, function ($query, $search) {
+        $businesses = Business::with(['queues' => fn ($q) => $q->withCount(['entries' => fn ($q) => $q->where('status', 'waiting')])])
+            ->when($request->search, fn ($query, $search) =>
                 $query->where('name', 'like', "%{$search}%")
-                      ->orWhere('location', 'like', "%{$search}%");
-            })
+                      ->orWhere('location', 'like', "%{$search}%")
+            )
             ->latest()
             ->get();
 
         return Inertia::render('Business/Index', [
             'businesses' => $businesses,
-            'filters' => $request->only(['search']),
+            'filters'    => $request->only('search'),
         ]);
     }
-    //
-public function show(Business $business)
-{
-    $business->load('queues');
 
-    return Inertia::render('Business/Show', [
-        'business' => $business,
-        'slug'=>$business->slug
-    ]);
-}
+    public function show(Business $business)
+    {
+        $business->load('queues');
+
+        return Inertia::render('Business/Show', [
+            'business' => $business,
+        ]);
+    }
+
     public function create()
-{
-    return Inertia::render('Business/Create');
-}
-
+    {
+        return Inertia::render('Business/Create');
+    }
 
     public function store(Request $request)
     {
         $validated = $request->validate([
             'name'       => 'required|string|max:255',
             'location'   => 'nullable|string',
-            'hero_image' => 'nullable|file|mimes:jpeg,png,jpg,gif,svg,webp,heic,heif,avif,bmp|max:30240',
-            'logo'       => 'nullable|file|mimes:jpeg,png,jpg,gif,svg,webp,heic,heif,avif,bmp|max:30240',
+            'hero_image' => self::IMAGE_VALIDATION,
+            'logo'       => self::IMAGE_VALIDATION,
         ]);
 
         $data = [
@@ -78,52 +72,54 @@ public function show(Business $business)
     public function edit(Business $business)
     {
         abort_unless($business->owner_id === auth()->id(), 403);
+
         return Inertia::render('Business/Edit', [
-            'business' => $business
+            'business' => $business,
         ]);
     }
 
     public function update(Request $request, Business $business)
     {
         abort_unless($business->owner_id === auth()->id(), 403);
-        
+
         $validated = $request->validate([
-            'name' => 'required|string|max:255',
-            'location' => 'nullable|string',
-            'hero_image' => 'nullable|file|mimes:jpeg,png,jpg,gif,svg,webp,heic,heif,avif,bmp|max:30240',
-            'logo' => 'nullable|file|mimes:jpeg,png,jpg,gif,svg,webp,heic,heif,avif,bmp|max:30240',
+            'name'       => 'required|string|max:255',
+            'location'   => 'nullable|string',
+            'hero_image' => self::IMAGE_VALIDATION,
+            'logo'       => self::IMAGE_VALIDATION,
         ]);
 
         $data = [
-            'name' => $validated['name'],
+            'name'     => $validated['name'],
             'location' => $validated['location'] ?? null,
         ];
 
         if ($request->hasFile('hero_image')) {
-            if ($business->hero_image_path) {
-                Storage::disk('public')->delete($business->hero_image_path);
-            }
+            Storage::disk('public')->delete($business->hero_image_path ?? '');
             $data['hero_image_path'] = $request->file('hero_image')->store('businesses', 'public');
         }
 
         if ($request->hasFile('logo')) {
-            if ($business->logo_path) {
-                Storage::disk('public')->delete($business->logo_path);
-            }
+            Storage::disk('public')->delete($business->logo_path ?? '');
             $data['logo_path'] = $request->file('logo')->store('businesses', 'public');
         }
 
         $business->update($data);
 
-        return redirect()->route('dashboard')->with('success', 'Business updated successfully');
+        return redirect()->route('dashboard')->with('success', 'Business updated successfully.');
     }
 
     public function destroy(Business $business)
     {
         abort_unless($business->owner_id === auth()->id(), 403);
-        
+
+        Storage::disk('public')->delete(array_filter([
+            $business->hero_image_path,
+            $business->logo_path,
+        ]));
+
         $business->delete();
 
-        return redirect()->route('dashboard')->with('success', 'Business deleted successfully');
+        return redirect()->route('dashboard')->with('success', 'Business deleted successfully.');
     }
 }
