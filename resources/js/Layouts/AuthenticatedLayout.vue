@@ -17,6 +17,7 @@ import {
     MessageSquare,
     Compass,
     Home,
+    ShieldCheck,
 } from "lucide-vue-next";
 
 const isSidebarOpen = ref(true);
@@ -56,6 +57,12 @@ const navigation = computed(() => {
 
     return items;
 });
+
+const adminNav = computed(() =>
+    pageProps.auth.is_admin
+        ? [{ name: 'Admin Panel', href: route('admin.dashboard'), icon: ShieldCheck, current: route().current('admin.*') }]
+        : []
+);
 
 const topNav = [
     { name: "Explore Queues", href: route("home"), icon: Home },
@@ -110,6 +117,27 @@ const topNav = [
                         item.name
                     }}</span>
                 </Link>
+
+                <!-- Admin section -->
+                <template v-if="adminNav.length">
+                    <div v-show="isSidebarOpen" class="pt-4 pb-1 px-1">
+                        <p class="text-[9px] font-bold uppercase tracking-[0.2em] text-teraq-muted/40">Administration</p>
+                    </div>
+                    <Link
+                        v-for="item in adminNav"
+                        :key="item.name"
+                        :href="item.href"
+                        class="sidebar-link text-amber-400 hover:text-amber-300 hover:bg-amber-500/10"
+                        :class="{
+                            'bg-amber-500/10 border border-amber-500/20 text-amber-300': item.current,
+                            'justify-center px-2': !isSidebarOpen,
+                        }"
+                        :title="item.name"
+                    >
+                        <component :is="item.icon" class="w-5 h-5 shrink-0" />
+                        <span v-show="isSidebarOpen" class="font-medium">{{ item.name }}</span>
+                    </Link>
+                </template>
             </nav>
 
             <div class="p-4 mt-auto">
