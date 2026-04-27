@@ -3,11 +3,11 @@
 TeraQ is a real-time queue management platform that lets businesses create and manage customer queues, while customers join and track their position live — with SMS notifications when it's their turn.
 
 <img width="960" height="451" alt="Image" src="https://github.com/user-attachments/assets/22e87cc2-6322-4e2f-abc9-e4c9c7a6b7a7" />
----
+
 <img width="625" height="448" alt="Image" src="https://github.com/user-attachments/assets/80bd0a0a-6973-4b01-b134-c7610f22d6d7" />
----
+
 <img width="405" height="443" alt="Image" src="https://github.com/user-attachments/assets/ed457450-4ee8-4e83-926b-fc945feb2e76" />
----
+
 
 ## Tech Stack
 
