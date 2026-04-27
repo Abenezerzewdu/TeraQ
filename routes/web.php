@@ -18,13 +18,15 @@ Route::get('/', function () {
 })->name('home');
 
 Route::get('/dashboard', function () {
+    $user = auth()->user();
+
     return Inertia::render('Dashboard', [
-        'active_entries' => auth()->user()->queueEntries()
+        'active_entries' => $user->queueEntries()
             ->with('queue.business')
             ->whereIn('status', ['waiting', 'serving'])
             ->get(),
-        'owned_businesses' => auth()->user()->businesses()
-            ->withCount(['queues'])
+        'owned_businesses' => $user->businesses()
+            ->withCount('queues')
             ->get(),
     ]);
 })->middleware(['auth', 'verified'])->name('dashboard');
@@ -40,6 +42,7 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
 });
 
 
+Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
@@ -48,6 +51,7 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
     Route::get('/businesses/{business}/edit', [BusinessController::class, 'edit'])->name('businesses.edit');
     Route::patch('/businesses/{business}', [BusinessController::class, 'update'])->name('businesses.update');
     Route::delete('/businesses/{business}', [BusinessController::class, 'destroy'])->name('businesses.destroy');
+});
 
 Route::post('/queues/{queue}/join',[QueueController::class,'join']);
 
