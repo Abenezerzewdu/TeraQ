@@ -48,7 +48,7 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
     Route::get('/businesses/{business}/edit', [BusinessController::class, 'edit'])->name('businesses.edit');
     Route::patch('/businesses/{business}', [BusinessController::class, 'update'])->name('businesses.update');
     Route::delete('/businesses/{business}', [BusinessController::class, 'destroy'])->name('businesses.destroy');
-});
+
 Route::post('/queues/{queue}/join',[QueueController::class,'join']);
 
 Route::get('/queues/{queue}',[QueueController::class,'show']);
