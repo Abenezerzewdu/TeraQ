@@ -48,7 +48,7 @@ const navigation = computed(() => {
         });
     } else {
         items.push({
-            name: "Register Business",
+            name: "Explore Businesses",
             href: route("businesses.create"),
             icon: PlusSquare,
             current: route().current("businesses.create"),
@@ -60,8 +60,15 @@ const navigation = computed(() => {
 
 const adminNav = computed(() =>
     pageProps.auth.is_admin
-        ? [{ name: 'Admin Panel', href: route('admin.dashboard'), icon: ShieldCheck, current: route().current('admin.*') }]
-        : []
+        ? [
+              {
+                  name: "Admin Panel",
+                  href: route("admin.dashboard"),
+                  icon: ShieldCheck,
+                  current: route().current("admin.*"),
+              },
+          ]
+        : [],
 );
 
 const topNav = [
@@ -121,7 +128,11 @@ const topNav = [
                 <!-- Admin section -->
                 <template v-if="adminNav.length">
                     <div v-show="isSidebarOpen" class="pt-4 pb-1 px-1">
-                        <p class="text-[9px] font-bold uppercase tracking-[0.2em] text-teraq-muted/40">Administration</p>
+                        <p
+                            class="text-[9px] font-bold uppercase tracking-[0.2em] text-teraq-muted/40"
+                        >
+                            Administration
+                        </p>
                     </div>
                     <Link
                         v-for="item in adminNav"
@@ -129,13 +140,16 @@ const topNav = [
                         :href="item.href"
                         class="sidebar-link text-amber-400 hover:text-amber-300 hover:bg-amber-500/10"
                         :class="{
-                            'bg-amber-500/10 border border-amber-500/20 text-amber-300': item.current,
+                            'bg-amber-500/10 border border-amber-500/20 text-amber-300':
+                                item.current,
                             'justify-center px-2': !isSidebarOpen,
                         }"
                         :title="item.name"
                     >
                         <component :is="item.icon" class="w-5 h-5 shrink-0" />
-                        <span v-show="isSidebarOpen" class="font-medium">{{ item.name }}</span>
+                        <span v-show="isSidebarOpen" class="font-medium">{{
+                            item.name
+                        }}</span>
                     </Link>
                 </template>
             </nav>
