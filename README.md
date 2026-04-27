@@ -13,9 +13,7 @@ Queue joining page
 
 <img width="405" height="443" alt="Image" src="https://github.com/user-attachments/assets/ed457450-4ee8-4e83-926b-fc945feb2e76" />
 
-sample video
 
-<iframe width="560" height="315" src="https://www.youtube.com/embed/HkdAHXoRtos?si=bpqDr9c2kaLa6gxv" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
 
 ## Tech Stack
 
