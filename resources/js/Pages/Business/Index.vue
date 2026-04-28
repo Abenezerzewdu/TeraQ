@@ -139,7 +139,7 @@ const getTotalWaiting = (business) => {
                     <div class="relative h-full glass-card hover:border-white/20 transition-all duration-500 flex flex-col overflow-hidden">
                         <!-- Card Header / Image Placeholder -->
                         <div class="relative h-48 overflow-hidden">
-                            <img :src="`https://images.unsplash.com/photo-1555396273-367ea4eb4db5?auto=format&fit=crop&q=80&w=600&sig=${business.id}`" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" />
+                            <img :src="business.hero_image_path ? `/storage/${business.hero_image_path}` : `https://images.unsplash.com/photo-1555396273-367ea4eb4db5?auto=format&fit=crop&q=80&w=600&sig=${business.id}`" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" />
                             <div class="absolute inset-0 bg-gradient-to-t from-teraq-surface/90 to-transparent"></div>
                             
                             <!-- Status Badges -->
